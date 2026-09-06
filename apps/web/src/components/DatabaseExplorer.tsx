@@ -49,50 +49,50 @@ export const DatabaseExplorer: React.FC<DatabaseExplorerProps> = ({
   });
 
   return (
-    <div className="h-full flex flex-col bg-[#080d19] border-l border-[#15233d] overflow-y-auto select-none font-sans">
+    <div className="h-full flex flex-col bg-[#080d19] border-l border-slate-800/60 overflow-y-auto select-none font-sans">
       {/* Header matching Mockup */}
-      <div className="p-3 border-b border-[#142036] space-y-2.5 bg-[#060a14] shrink-0">
+      <div className="p-3 border-b border-slate-800/60 space-y-2.5 bg-[#070c17] shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs font-bold text-slate-200">
-            <Database className="w-3.5 h-3.5 text-[#00e5ff]" />
+            <Database className="w-3.5 h-3.5 text-sky-400" />
             <span>Database Explorer</span>
           </div>
-          <span className="text-[10px] font-mono text-cyan-400 bg-[#0c1830] px-1.5 py-0.5 rounded border border-[#142d54]">
+          <span className="text-[10px] font-mono text-sky-400 bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-800/70">
             PostgreSQL 16
           </span>
         </div>
 
-        {/* Search Input */}
+        {/* Search Input with Muted Translucent Style */}
         <div className="relative">
-          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+          <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-2.5" />
           <input
             type="text"
             placeholder="Search tables..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-[#070c17] border border-[#172742] rounded-lg pl-8 pr-6 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-[#00e5ff] transition-colors font-mono"
+            className="w-full bg-slate-900/60 border border-slate-800/60 rounded-lg pl-8 pr-6 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-sky-500/50 transition-colors font-mono"
           />
           <span className="absolute right-2.5 top-2 text-[10px] text-slate-500 font-mono">⌘</span>
         </div>
       </div>
 
-      {/* Schema Tree Section matching Mockup */}
+      {/* Schema Tree Section */}
       <div className="p-3 space-y-1 text-xs font-mono shrink-0">
         <div
           onClick={() => setIsDbOpen(!isDbOpen)}
           className="flex items-center gap-1.5 text-slate-300 font-semibold cursor-pointer hover:text-white transition-colors"
         >
           {isDbOpen ? (
-            <ChevronDown className="w-3.5 h-3.5 text-cyan-400" />
+            <ChevronDown className="w-3.5 h-3.5 text-sky-400" />
           ) : (
-            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+            <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
           )}
-          <Database className="w-3.5 h-3.5 text-cyan-400" />
+          <Database className="w-3.5 h-3.5 text-sky-400" />
           <span>nexus_db</span>
         </div>
 
         {isDbOpen && (
-          <div className="pl-4 space-y-1 mt-1 border-l border-[#172640]">
+          <div className="pl-4 space-y-1 mt-1 border-l border-slate-800/60">
             <div
               onClick={() => setIsPublicOpen(!isPublicOpen)}
               className="flex items-center gap-1.5 text-slate-400 font-medium cursor-pointer hover:text-slate-200"
@@ -106,7 +106,7 @@ export const DatabaseExplorer: React.FC<DatabaseExplorerProps> = ({
             </div>
 
             {isPublicOpen && (
-              <div className="pl-3 space-y-0.5 mt-1 border-l border-[#172640]">
+              <div className="pl-3 space-y-0.5 mt-1 border-l border-slate-800/60">
                 {filteredTables.map((tbl) => {
                   const isExpanded = expandedTables[tbl.name] || false;
                   const isSelected = selectedTable === tbl.name;
@@ -120,8 +120,8 @@ export const DatabaseExplorer: React.FC<DatabaseExplorerProps> = ({
                         }}
                         className={`group flex items-center justify-between px-2 py-1 rounded cursor-pointer transition-colors ${
                           isSelected
-                            ? 'bg-[#0f213d] text-[#00e5ff] font-semibold border-l-2 border-[#00e5ff]'
-                            : 'text-slate-400 hover:text-slate-200 hover:bg-[#0c1527]'
+                            ? 'bg-sky-500/10 text-sky-300 font-semibold border-l-2 border-sky-400'
+                            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
                         }`}
                       >
                         <div className="flex items-center gap-1.5 truncate">
@@ -130,12 +130,12 @@ export const DatabaseExplorer: React.FC<DatabaseExplorerProps> = ({
                             className="p-0.5 hover:text-white"
                           >
                             {isExpanded ? (
-                              <ChevronDown className="w-2.5 h-2.5 text-cyan-400" />
+                              <ChevronDown className="w-2.5 h-2.5 text-sky-400" />
                             ) : (
                               <ChevronRight className="w-2.5 h-2.5 text-slate-500" />
                             )}
                           </button>
-                          <Table2 className={`w-3 h-3 ${isSelected ? 'text-[#00e5ff]' : 'text-slate-500'}`} />
+                          <Table2 className={`w-3.5 h-3.5 ${isSelected ? 'text-sky-400' : 'text-slate-500'}`} />
                           <span className="truncate">{tbl.name}</span>
                         </div>
 
@@ -147,7 +147,7 @@ export const DatabaseExplorer: React.FC<DatabaseExplorerProps> = ({
                               onInsertQuery?.(`SELECT * FROM ${tbl.name} LIMIT 10;`);
                             }}
                             title={`Paste SELECT * FROM ${tbl.name}`}
-                            className="p-0.5 hover:text-cyan-300"
+                            className="p-0.5 hover:text-sky-300"
                           >
                             <Code className="w-3 h-3" />
                           </button>
@@ -156,7 +156,7 @@ export const DatabaseExplorer: React.FC<DatabaseExplorerProps> = ({
 
                       {/* Expanded Columns List */}
                       {isExpanded && (
-                        <div className="pl-5 pr-1 py-1 space-y-0.5 text-[10px] bg-[#070b14]/50 rounded border-l border-[#192b4a]">
+                        <div className="pl-5 pr-1 py-1 space-y-0.5 text-[10px] bg-slate-900/30 rounded border-l border-slate-800/60">
                           {tbl.columns.map((col) => (
                             <div
                               key={col.name}
@@ -166,11 +166,11 @@ export const DatabaseExplorer: React.FC<DatabaseExplorerProps> = ({
                                 {col.isPk ? (
                                   <Key className="w-2.5 h-2.5 text-amber-400 shrink-0" />
                                 ) : col.isFk ? (
-                                  <Link2 className="w-2.5 h-2.5 text-cyan-400 shrink-0" />
+                                  <Link2 className="w-2.5 h-2.5 text-sky-400 shrink-0" />
                                 ) : (
                                   <span className="text-slate-600 text-[8px] w-2.5 text-center">-</span>
                                 )}
-                                <span className={col.isPk ? 'text-amber-300 font-semibold' : col.isFk ? 'text-cyan-300' : ''}>
+                                <span className={col.isPk ? 'text-amber-300 font-medium' : col.isFk ? 'text-sky-300' : ''}>
                                   {col.name}
                                 </span>
                               </div>
@@ -188,8 +188,8 @@ export const DatabaseExplorer: React.FC<DatabaseExplorerProps> = ({
         )}
       </div>
 
-      {/* Relationships Section (Interactive ERD Diagram matching Mockup) */}
-      <div className="p-3 border-t border-[#142036] space-y-2 flex-1">
+      {/* Relationships Section (Interactive ERD Diagram) */}
+      <div className="p-3 border-t border-slate-800/60 space-y-2 flex-1">
         <SchemaRelationshipsErd
           schema={schema}
           selectedTable={selectedTable}

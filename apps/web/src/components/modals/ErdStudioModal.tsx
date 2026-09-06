@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Database, ZoomIn, ZoomOut, RotateCcw, Key, Link2, Table2, Code, Download } from 'lucide-react';
+import { X, Database, ZoomIn, ZoomOut, RotateCcw, Key, Link2, Code } from 'lucide-react';
 import { SchemaTable } from '../../types';
 
 interface ErdStudioModalProps {
@@ -23,18 +23,18 @@ export const ErdStudioModal: React.FC<ErdStudioModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-6 select-none font-sans">
-      <div className="w-full max-w-6xl h-[88vh] bg-[#070c17] border border-[#0284c7]/50 rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-6 select-none font-sans">
+      <div className="w-full max-w-6xl h-[88vh] bg-slate-900/95 backdrop-blur-xl border border-slate-700/60 rounded-2xl shadow-2xl overflow-hidden flex flex-col">
         {/* Studio Header */}
-        <div className="px-6 py-4 bg-gradient-to-r from-[#0a1832] via-[#09152b] to-[#070e1c] border-b border-[#162f59] flex items-center justify-between shrink-0">
+        <div className="px-6 py-4 bg-slate-900 border-b border-slate-800/70 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#0284c7]/20 border border-[#00e5ff]/40 flex items-center justify-center">
-              <Database className="w-5 h-5 text-[#00e5ff]" />
+            <div className="w-9 h-9 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center">
+              <Database className="w-5 h-5 text-sky-400" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white font-mono flex items-center gap-2">
+              <h2 className="text-base font-bold text-slate-100 font-mono flex items-center gap-2">
                 <span>PostgreSQL Schema Visualizer</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#00e5ff]/15 text-[#00e5ff] font-bold border border-[#00e5ff]/30">
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-300 font-medium border border-sky-500/20">
                   ERD STUDIO
                 </span>
               </h2>
@@ -46,27 +46,27 @@ export const ErdStudioModal: React.FC<ErdStudioModalProps> = ({
 
           <div className="flex items-center gap-3">
             {/* Zoom Controls */}
-            <div className="flex items-center gap-1 bg-[#091122] border border-[#172d54] rounded-lg p-1 text-slate-300 text-xs">
+            <div className="flex items-center gap-1 bg-slate-950/60 border border-slate-800/60 rounded-lg p-1 text-slate-300 text-xs">
               <button
                 onClick={() => setZoom(Math.max(0.75, zoom - 0.1))}
-                className="p-1 hover:text-cyan-300 hover:bg-[#0e213f] rounded"
+                className="p-1 hover:text-sky-300 hover:bg-slate-800/60 rounded transition-colors"
                 title="Zoom Out"
               >
                 <ZoomOut className="w-4 h-4" />
               </button>
-              <span className="px-2 font-mono text-[11px] text-cyan-300 font-bold">
+              <span className="px-2 font-mono text-[11px] text-sky-300 font-semibold">
                 {Math.round(zoom * 100)}%
               </span>
               <button
                 onClick={() => setZoom(Math.min(1.5, zoom + 0.1))}
-                className="p-1 hover:text-cyan-300 hover:bg-[#0e213f] rounded"
+                className="p-1 hover:text-sky-300 hover:bg-slate-800/60 rounded transition-colors"
                 title="Zoom In"
               >
                 <ZoomIn className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setZoom(1)}
-                className="p-1 hover:text-cyan-300 hover:bg-[#0e213f] rounded ml-1"
+                className="p-1 hover:text-sky-300 hover:bg-slate-800/60 rounded ml-1 transition-colors"
                 title="Reset Zoom"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -75,7 +75,7 @@ export const ErdStudioModal: React.FC<ErdStudioModalProps> = ({
 
             <button
               onClick={onClose}
-              className="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-[#0f1f3a] transition-colors"
+              className="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800/50 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -84,11 +84,11 @@ export const ErdStudioModal: React.FC<ErdStudioModalProps> = ({
 
         {/* Studio Canvas */}
         <div className="flex-1 bg-[#050811] overflow-auto p-8 relative flex items-center justify-center">
-          {/* Background Grid Lines (like CAD / DBeaver / pgAdmin canvas) */}
+          {/* Blueprint Dots Grid */}
           <div
-            className="absolute inset-0 opacity-20 pointer-events-none"
+            className="absolute inset-0 opacity-15 pointer-events-none"
             style={{
-              backgroundImage: 'radial-gradient(circle, #0284c7 1px, transparent 1px)',
+              backgroundImage: 'radial-gradient(circle, #38bdf8 1px, transparent 1px)',
               backgroundSize: '24px 24px'
             }}
           ></div>
@@ -97,23 +97,19 @@ export const ErdStudioModal: React.FC<ErdStudioModalProps> = ({
             style={{ transform: `scale(${zoom})`, transformOrigin: 'center center' }}
             className="relative w-[920px] h-[480px] transition-transform duration-150"
           >
-            {/* SVG Connecting Wires in High-Res */}
+            {/* SVG Connecting Wires with Soft Ambient Color */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none z-10" viewBox="0 0 920 480">
               <defs>
-                <filter id="studio-glow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="3" result="blur" />
-                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                </filter>
                 <marker
-                  id="studio-arrow"
+                  id="studio-arrow-refined"
                   viewBox="0 0 10 10"
                   refX="7"
                   refY="5"
-                  markerWidth="6"
-                  markerHeight="6"
+                  markerWidth="5"
+                  markerHeight="5"
                   orient="auto-start-reverse"
                 >
-                  <path d="M 0 1 L 8 5 L 0 9 z" fill="#00e5ff" />
+                  <path d="M 0 1 L 8 5 L 0 9 z" fill="#38bdf8" />
                 </marker>
               </defs>
 
@@ -121,13 +117,13 @@ export const ErdStudioModal: React.FC<ErdStudioModalProps> = ({
               <path
                 d="M 230 110 C 290 110, 290 145, 340 145"
                 fill="none"
-                stroke="#00e5ff"
-                strokeWidth="2.5"
-                filter="url(#studio-glow)"
+                stroke="#38bdf8"
+                strokeWidth="2"
+                strokeOpacity="0.8"
               />
-              <circle cx="230" cy="110" r="4" fill="#070b14" stroke="#00e5ff" strokeWidth="2" />
-              <circle cx="340" cy="145" r="4" fill="#00e5ff" />
-              <text x="275" y="100" fill="#38bdf8" fontSize="11" fontFamily="monospace" textAnchor="middle">
+              <circle cx="230" cy="110" r="3.5" fill="#070b14" stroke="#38bdf8" strokeWidth="2" />
+              <circle cx="340" cy="145" r="3.5" fill="#38bdf8" />
+              <text x="275" y="100" fill="#7dd3fc" fontSize="11" fontFamily="monospace" textAnchor="middle">
                 1 : N (FK)
               </text>
 
@@ -135,13 +131,13 @@ export const ErdStudioModal: React.FC<ErdStudioModalProps> = ({
               <path
                 d="M 580 110 C 630 110, 630 145, 680 145"
                 fill="none"
-                stroke="#00e5ff"
-                strokeWidth="2.5"
-                filter="url(#studio-glow)"
+                stroke="#38bdf8"
+                strokeWidth="2"
+                strokeOpacity="0.8"
               />
-              <circle cx="580" cy="110" r="4" fill="#070b14" stroke="#00e5ff" strokeWidth="2" />
-              <circle cx="680" cy="145" r="4" fill="#00e5ff" />
-              <text x="630" y="100" fill="#38bdf8" fontSize="11" fontFamily="monospace" textAnchor="middle">
+              <circle cx="580" cy="110" r="3.5" fill="#070b14" stroke="#38bdf8" strokeWidth="2" />
+              <circle cx="680" cy="145" r="3.5" fill="#38bdf8" />
+              <text x="630" y="100" fill="#7dd3fc" fontSize="11" fontFamily="monospace" textAnchor="middle">
                 1 : N (FK)
               </text>
 
@@ -149,34 +145,36 @@ export const ErdStudioModal: React.FC<ErdStudioModalProps> = ({
               <path
                 d="M 460 250 C 460 280, 360 285, 360 320"
                 fill="none"
-                stroke="#0284c7"
-                strokeWidth="2.5"
-                markerEnd="url(#studio-arrow)"
+                stroke="#0ea5e9"
+                strokeWidth="2"
+                strokeOpacity="0.75"
+                markerEnd="url(#studio-arrow-refined)"
               />
-              <circle cx="460" cy="250" r="4" fill="#070b14" stroke="#00e5ff" strokeWidth="2" />
-              <circle cx="360" cy="320" r="4" fill="#00e5ff" />
+              <circle cx="460" cy="250" r="3.5" fill="#070b14" stroke="#38bdf8" strokeWidth="2" />
+              <circle cx="360" cy="320" r="3.5" fill="#38bdf8" />
 
               {/* Wire 4: orders -> refunds */}
               <path
                 d="M 520 250 C 520 280, 660 285, 660 320"
                 fill="none"
-                stroke="#0284c7"
-                strokeWidth="2.5"
+                stroke="#0ea5e9"
+                strokeWidth="2"
+                strokeOpacity="0.75"
               />
-              <circle cx="520" cy="250" r="4" fill="#070b14" stroke="#00e5ff" strokeWidth="2" />
-              <circle cx="660" cy="320" r="4" fill="#00e5ff" />
+              <circle cx="520" cy="250" r="3.5" fill="#070b14" stroke="#38bdf8" strokeWidth="2" />
+              <circle cx="660" cy="320" r="3.5" fill="#38bdf8" />
 
               {/* Wire 5: transactions -> refunds */}
               <path
                 d="M 470 410 L 550 410"
                 fill="none"
-                stroke="#10b981"
-                strokeWidth="2.5"
-                filter="url(#studio-glow)"
+                stroke="#34d399"
+                strokeWidth="2"
+                strokeOpacity="0.8"
               />
-              <circle cx="470" cy="410" r="4" fill="#070b14" stroke="#10b981" strokeWidth="2" />
-              <circle cx="550" cy="410" r="4" fill="#10b981" />
-              <text x="510" y="400" fill="#34d399" fontSize="11" fontFamily="monospace" textAnchor="middle">
+              <circle cx="470" cy="410" r="3.5" fill="#070b14" stroke="#34d399" strokeWidth="2" />
+              <circle cx="550" cy="410" r="3.5" fill="#34d399" />
+              <text x="510" y="400" fill="#6ee7b7" fontSize="11" fontFamily="monospace" textAnchor="middle">
                 1 : N
               </text>
             </svg>
@@ -185,18 +183,18 @@ export const ErdStudioModal: React.FC<ErdStudioModalProps> = ({
             <div
               style={{ left: '20px', top: '40px', width: '210px' }}
               onClick={() => setSelectedTable('customers')}
-              className={`absolute z-20 rounded-xl border text-xs font-mono shadow-2xl transition-all ${
+              className={`absolute z-20 rounded-xl border text-xs font-mono shadow-xl transition-all ${
                 selectedTable === 'customers'
-                  ? 'bg-[#09172f] border-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.4)]'
-                  : 'bg-[#081120] border-[#0284c7] hover:border-cyan-400'
+                  ? 'bg-slate-900 border-sky-400 shadow-md'
+                  : 'bg-slate-900/80 border-slate-700/60 hover:border-sky-500/50'
               }`}
             >
-              <div className="px-3 py-2 bg-[#0c2242] border-b border-[#173866] rounded-t-xl font-bold text-white flex items-center justify-between">
+              <div className="px-3 py-2 bg-slate-800/50 border-b border-slate-700/40 rounded-t-xl font-semibold text-slate-200 flex items-center justify-between">
                 <span className="text-sm">customers</span>
-                <span className="text-[10px] text-slate-400">TABLE</span>
+                <span className="text-[10px] text-slate-500">TABLE</span>
               </div>
               <div className="p-3 space-y-1.5 text-slate-300">
-                <div className="flex items-center justify-between text-amber-300 font-bold">
+                <div className="flex items-center justify-between text-amber-300 font-semibold">
                   <div className="flex items-center gap-1.5">
                     <Key className="w-3.5 h-3.5 text-amber-400" />
                     <span>id</span>
@@ -222,32 +220,32 @@ export const ErdStudioModal: React.FC<ErdStudioModalProps> = ({
             <div
               style={{ left: '340px', top: '25px', width: '240px' }}
               onClick={() => setSelectedTable('orders')}
-              className={`absolute z-20 rounded-xl border text-xs font-mono shadow-2xl transition-all ${
+              className={`absolute z-20 rounded-xl border text-xs font-mono shadow-xl transition-all ${
                 selectedTable === 'orders'
-                  ? 'bg-[#0b1b36] border-[#00e5ff] shadow-[0_0_24px_rgba(0,229,255,0.5)]'
-                  : 'bg-[#081326] border-[#00e5ff]/80 hover:border-cyan-300'
+                  ? 'bg-slate-900 border-sky-400 shadow-md'
+                  : 'bg-slate-900/80 border-sky-500/40 hover:border-sky-400'
               }`}
             >
-              <div className="px-3 py-2 bg-[#0f2952] border-b border-[#184282] rounded-t-xl font-bold text-white flex items-center justify-between">
+              <div className="px-3 py-2 bg-sky-950/30 border-b border-sky-900/40 rounded-t-xl font-bold text-white flex items-center justify-between">
                 <span className="text-sm">orders</span>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-[#00e5ff]/20 text-[#00e5ff] font-bold">
+                <span className="text-[10px] px-2 py-0.5 rounded bg-sky-500/15 text-sky-300 font-medium border border-sky-500/25">
                   TARGET
                 </span>
               </div>
               <div className="p-3 space-y-1.5 text-slate-300">
-                <div className="flex items-center justify-between text-amber-300 font-bold">
+                <div className="flex items-center justify-between text-amber-300 font-semibold">
                   <div className="flex items-center gap-1.5">
                     <Key className="w-3.5 h-3.5 text-amber-400" />
                     <span>id</span>
                   </div>
                   <span className="text-[10px] text-amber-400/80">INT (PK)</span>
                 </div>
-                <div className="flex items-center justify-between text-cyan-300 font-semibold">
+                <div className="flex items-center justify-between text-sky-300 font-medium">
                   <div className="flex items-center gap-1.5">
-                    <Link2 className="w-3.5 h-3.5 text-cyan-400" />
+                    <Link2 className="w-3.5 h-3.5 text-sky-400" />
                     <span>customer_id</span>
                   </div>
-                  <span className="text-[10px] text-cyan-400">FK &rarr; customers.id</span>
+                  <span className="text-[10px] text-sky-400/80">FK &rarr; customers.id</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>status</span>
@@ -268,30 +266,30 @@ export const ErdStudioModal: React.FC<ErdStudioModalProps> = ({
             <div
               style={{ left: '680px', top: '40px', width: '220px' }}
               onClick={() => setSelectedTable('payments')}
-              className={`absolute z-20 rounded-xl border text-xs font-mono shadow-2xl transition-all ${
+              className={`absolute z-20 rounded-xl border text-xs font-mono shadow-xl transition-all ${
                 selectedTable === 'payments'
-                  ? 'bg-[#09172f] border-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.4)]'
-                  : 'bg-[#081120] border-[#0284c7] hover:border-cyan-400'
+                  ? 'bg-slate-900 border-sky-400 shadow-md'
+                  : 'bg-slate-900/80 border-slate-700/60 hover:border-sky-500/50'
               }`}
             >
-              <div className="px-3 py-2 bg-[#0c2242] border-b border-[#173866] rounded-t-xl font-bold text-white flex items-center justify-between">
+              <div className="px-3 py-2 bg-slate-800/50 border-b border-slate-700/40 rounded-t-xl font-semibold text-slate-200 flex items-center justify-between">
                 <span className="text-sm">payments</span>
-                <span className="text-[10px] text-slate-400">TABLE</span>
+                <span className="text-[10px] text-slate-500">TABLE</span>
               </div>
               <div className="p-3 space-y-1.5 text-slate-300">
-                <div className="flex items-center justify-between text-amber-300 font-bold">
+                <div className="flex items-center justify-between text-amber-300 font-semibold">
                   <div className="flex items-center gap-1.5">
                     <Key className="w-3.5 h-3.5 text-amber-400" />
                     <span>id</span>
                   </div>
                   <span className="text-[10px] text-amber-400/80">INT (PK)</span>
                 </div>
-                <div className="flex items-center justify-between text-cyan-300 font-semibold">
+                <div className="flex items-center justify-between text-sky-300 font-medium">
                   <div className="flex items-center gap-1.5">
-                    <Link2 className="w-3.5 h-3.5 text-cyan-400" />
+                    <Link2 className="w-3.5 h-3.5 text-sky-400" />
                     <span>order_id</span>
                   </div>
-                  <span className="text-[10px] text-cyan-400">FK &rarr; orders.id</span>
+                  <span className="text-[10px] text-sky-400/80">FK &rarr; orders.id</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>amount</span>
@@ -308,36 +306,36 @@ export const ErdStudioModal: React.FC<ErdStudioModalProps> = ({
               </div>
             </div>
 
-            {/* TABLE 4: transactions (NULL ANOMALY) */}
+            {/* TABLE 4: transactions */}
             <div
               style={{ left: '230px', top: '300px', width: '240px' }}
               onClick={() => setSelectedTable('transactions')}
-              className={`absolute z-20 rounded-xl border text-xs font-mono shadow-2xl transition-all ${
+              className={`absolute z-20 rounded-xl border text-xs font-mono shadow-xl transition-all ${
                 selectedTable === 'transactions'
-                  ? 'bg-[#06241f] border-[#00e5ff] shadow-[0_0_24px_rgba(0,229,255,0.4)]'
-                  : 'bg-[#051714] border-[#059669]/90 hover:border-emerald-400'
+                  ? 'bg-slate-900 border-emerald-400 shadow-md'
+                  : 'bg-slate-900/80 border-emerald-900/50 hover:border-emerald-500/50'
               }`}
             >
-              <div className="px-3 py-2 bg-[#07362d] border-b border-[#0d594a] rounded-t-xl font-bold text-emerald-200 flex items-center justify-between">
+              <div className="px-3 py-2 bg-emerald-950/30 border-b border-emerald-900/40 rounded-t-xl font-semibold text-emerald-200 flex items-center justify-between">
                 <span className="text-sm">transactions</span>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-rose-950/70 text-rose-300 font-bold border border-rose-800/60">
+                <span className="text-[10px] px-2 py-0.5 rounded bg-rose-500/15 text-rose-300 font-medium border border-rose-500/25">
                   NULL ANOMALY
                 </span>
               </div>
               <div className="p-3 space-y-1.5 text-slate-300">
-                <div className="flex items-center justify-between text-amber-300 font-bold">
+                <div className="flex items-center justify-between text-amber-300 font-semibold">
                   <div className="flex items-center gap-1.5">
                     <Key className="w-3.5 h-3.5 text-amber-400" />
                     <span>id</span>
                   </div>
                   <span className="text-[10px] text-amber-400/80">INT (PK)</span>
                 </div>
-                <div className="flex items-center justify-between text-cyan-300 font-semibold">
+                <div className="flex items-center justify-between text-sky-300 font-medium">
                   <div className="flex items-center gap-1.5">
-                    <Link2 className="w-3.5 h-3.5 text-cyan-400" />
+                    <Link2 className="w-3.5 h-3.5 text-sky-400" />
                     <span>payment_id</span>
                   </div>
-                  <span className="text-[10px] text-cyan-400">FK &rarr; payments.id</span>
+                  <span className="text-[10px] text-sky-400/80">FK &rarr; payments.id</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>status</span>
@@ -358,30 +356,30 @@ export const ErdStudioModal: React.FC<ErdStudioModalProps> = ({
             <div
               style={{ left: '550px', top: '300px', width: '240px' }}
               onClick={() => setSelectedTable('refunds')}
-              className={`absolute z-20 rounded-xl border text-xs font-mono shadow-2xl transition-all ${
+              className={`absolute z-20 rounded-xl border text-xs font-mono shadow-xl transition-all ${
                 selectedTable === 'refunds'
-                  ? 'bg-[#06241f] border-[#00e5ff] shadow-[0_0_24px_rgba(0,229,255,0.4)]'
-                  : 'bg-[#051714] border-[#059669]/90 hover:border-emerald-400'
+                  ? 'bg-slate-900 border-emerald-400 shadow-md'
+                  : 'bg-slate-900/80 border-emerald-900/50 hover:border-emerald-500/50'
               }`}
             >
-              <div className="px-3 py-2 bg-[#07362d] border-b border-[#0d594a] rounded-t-xl font-bold text-emerald-200 flex items-center justify-between">
+              <div className="px-3 py-2 bg-emerald-950/30 border-b border-emerald-900/40 rounded-t-xl font-semibold text-emerald-200 flex items-center justify-between">
                 <span className="text-sm">refunds</span>
-                <span className="text-[10px] text-slate-400">LEDGER</span>
+                <span className="text-[10px] text-slate-500">LEDGER</span>
               </div>
               <div className="p-3 space-y-1.5 text-slate-300">
-                <div className="flex items-center justify-between text-amber-300 font-bold">
+                <div className="flex items-center justify-between text-amber-300 font-semibold">
                   <div className="flex items-center gap-1.5">
                     <Key className="w-3.5 h-3.5 text-amber-400" />
                     <span>id</span>
                   </div>
                   <span className="text-[10px] text-amber-400/80">INT (PK)</span>
                 </div>
-                <div className="flex items-center justify-between text-cyan-300 font-semibold">
+                <div className="flex items-center justify-between text-sky-300 font-medium">
                   <div className="flex items-center gap-1.5">
-                    <Link2 className="w-3.5 h-3.5 text-cyan-400" />
+                    <Link2 className="w-3.5 h-3.5 text-sky-400" />
                     <span>transaction_id</span>
                   </div>
-                  <span className="text-[10px] text-cyan-400">FK &rarr; transactions.id</span>
+                  <span className="text-[10px] text-sky-400/80">FK &rarr; transactions.id</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>amount</span>
@@ -401,10 +399,10 @@ export const ErdStudioModal: React.FC<ErdStudioModalProps> = ({
         </div>
 
         {/* Footer Bar */}
-        <div className="px-6 py-3 bg-[#060a14] border-t border-[#13223a] flex items-center justify-between text-xs shrink-0">
+        <div className="px-6 py-3 bg-slate-950/80 border-t border-slate-800/70 flex items-center justify-between text-xs shrink-0">
           <div className="flex items-center gap-2 text-slate-400">
             <span>Selected Table:</span>
-            <strong className="text-cyan-300 font-mono">{selectedTable}</strong>
+            <strong className="text-sky-300 font-mono">{selectedTable}</strong>
           </div>
 
           <div className="flex items-center gap-2">
@@ -413,14 +411,14 @@ export const ErdStudioModal: React.FC<ErdStudioModalProps> = ({
                 onInsertQuery?.(`SELECT * FROM ${selectedTable} LIMIT 25;`);
                 onClose();
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0284c7] hover:bg-[#0369a1] text-white font-bold transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-medium transition-colors"
             >
               <Code className="w-3.5 h-3.5" />
               <span>Load SELECT Query in Editor</span>
             </button>
             <button
               onClick={onClose}
-              className="px-4 py-1.5 rounded-lg bg-[#0b1b36] hover:bg-[#122b54] text-slate-200 border border-[#173769] transition-colors"
+              className="px-4 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border border-slate-700/60 transition-colors"
             >
               Close Studio
             </button>

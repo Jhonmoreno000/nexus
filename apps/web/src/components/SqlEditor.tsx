@@ -39,14 +39,14 @@ export const SqlEditor: React.FC<SqlEditorProps> = ({
   return (
     <div
       onKeyDown={handleKeyDown}
-      className="flex flex-col h-full bg-[#080d19] border-b border-[#15233d] select-none"
+      className="flex flex-col h-full bg-[#080d19] border-b border-slate-800/60 select-none"
     >
       {/* Tab Header Bar */}
-      <div className="h-10 bg-[#060a14] border-b border-[#15233d] flex items-center justify-between px-3">
+      <div className="h-10 bg-[#070c17] border-b border-slate-800/60 flex items-center justify-between px-3">
         <div className="flex items-center gap-1 overflow-x-auto">
           <div className="flex items-center gap-1.5 text-xs text-slate-300 font-medium mr-2">
-            <Code2 className="w-3.5 h-3.5 text-[#00e5ff]" />
-            <span className="font-semibold text-white">SQL Editor</span>
+            <Code2 className="w-3.5 h-3.5 text-sky-400" />
+            <span className="font-semibold text-slate-200">SQL Editor</span>
           </div>
 
           {tabs.map((tab) => (
@@ -55,8 +55,8 @@ export const SqlEditor: React.FC<SqlEditorProps> = ({
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-3 py-1.5 rounded-t text-xs font-mono cursor-pointer transition-all border-t-2 ${
                 activeTab === tab.id
-                  ? 'bg-[#0b1322] text-[#00e5ff] border-[#00e5ff] font-semibold'
-                  : 'text-slate-400 border-transparent hover:bg-[#0c1527] hover:text-slate-200'
+                  ? 'bg-slate-900/80 text-sky-300 border-sky-400 font-semibold'
+                  : 'text-slate-400 border-transparent hover:bg-slate-800/40 hover:text-slate-200'
               }`}
             >
               <span>{tab.title}</span>
@@ -66,7 +66,7 @@ export const SqlEditor: React.FC<SqlEditorProps> = ({
                     e.stopPropagation();
                     setTabs(tabs.filter((t) => t.id !== tab.id));
                   }}
-                  className="hover:text-red-400 rounded"
+                  className="hover:text-rose-400 rounded p-0.5"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -77,7 +77,7 @@ export const SqlEditor: React.FC<SqlEditorProps> = ({
           <button
             onClick={addTab}
             title="New query tab"
-            className="p-1 rounded text-slate-400 hover:text-white hover:bg-[#111e33] transition-colors"
+            className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800/50 transition-colors"
           >
             <Plus className="w-3.5 h-3.5" />
           </button>
@@ -86,7 +86,7 @@ export const SqlEditor: React.FC<SqlEditorProps> = ({
         <div className="flex items-center gap-4 text-[11px] text-slate-400">
           <span>PostgreSQL 16</span>
           <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]"></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
             Auto-save
           </span>
           <button title="Toggle Fullscreen" className="text-slate-400 hover:text-slate-200">
@@ -118,22 +118,22 @@ export const SqlEditor: React.FC<SqlEditorProps> = ({
         />
       </div>
 
-      {/* Footer Action Bar */}
-      <div className="h-12 bg-[#060a14] border-t border-[#15233d] px-4 flex items-center justify-between">
+      {/* Footer Action Bar with Professional Refined Color Gradient */}
+      <div className="h-12 bg-[#070c17] border-t border-slate-800/60 px-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button
             onClick={onRunQuery}
             disabled={isRunning}
-            className="flex items-center gap-2 px-4 py-1.5 rounded-lg bg-[#00bcd4] hover:bg-[#00acc1] text-[#070b14] font-bold text-xs tracking-wide transition-all duration-150 glow-cyan-sm active:scale-95 disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-1.5 rounded-lg bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-semibold text-xs tracking-wide transition-all shadow-md shadow-sky-950/40 border border-sky-400/30 active:scale-95 disabled:opacity-50"
           >
             <Play className="w-3.5 h-3.5 fill-current" />
             <span>RUN QUERY</span>
-            <span className="ml-1 text-[10px] opacity-75 font-mono">Ctrl + Enter</span>
+            <span className="ml-1 text-[10px] text-sky-100 font-mono opacity-80">Ctrl + Enter</span>
           </button>
 
           <button
             onClick={onSubmitSolution}
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#0d1627] hover:bg-[#132038] border border-[#1e2f4e] text-slate-200 font-semibold text-xs tracking-wide transition-all active:scale-95"
+            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-slate-900/80 hover:bg-slate-800/80 border border-slate-700/60 text-slate-200 font-semibold text-xs tracking-wide transition-all active:scale-95"
           >
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
             <span>SUBMIT SOLUTION</span>
@@ -142,7 +142,7 @@ export const SqlEditor: React.FC<SqlEditorProps> = ({
 
         <button
           onClick={onOpenHint}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0d1627] hover:bg-[#132038] border border-[#1e2f4e] text-slate-300 hover:text-cyan-300 text-xs font-semibold tracking-wide transition-all active:scale-95"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/80 hover:bg-slate-800/80 border border-slate-700/60 text-slate-300 hover:text-amber-300 text-xs font-semibold tracking-wide transition-all active:scale-95"
         >
           <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
           <span>HINT</span>
