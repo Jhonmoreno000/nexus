@@ -1,0 +1,25 @@
+{
+  "name": "nexus-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NEXUS — Database Engineering Simulator",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present"
+  },
+  "keywords": [
+    "sql",
+    "simulator",
+    "database",
+    "postgres",
+    "monaco",
+    "education"
+  ],
+  "author": "NEXUS Engineering Team",
+  "license": "MIT"
+}

@@ -1,0 +1,23 @@
+{
+  "id": "payment-integrity-001",
+  "incidentNumber": 1842,
+  "title": "Payment Integrity",
+  "domain": "Fintech / Payments",
+  "difficulty": "advanced",
+  "database": "postgresql",
+  "timeRemainingSeconds": 1458,
+  "skills": [
+    "sql-reasoning",
+    "data-modeling",
+    "debugging",
+    "optimization"
+  ],
+  "evaluation": {
+    "correctness": 0.4,
+    "logic": 0.2,
+    "robustness": 0.15,
+    "performance": 0.1,
+    "readability": 0.1,
+    "security": 0.05
+  }
+}
