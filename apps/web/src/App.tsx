@@ -408,7 +408,18 @@ export function App() {
               {/* Column 3: Database Explorer & Skills Progress */}
               <div className="col-span-3 h-full flex flex-col overflow-hidden">
                 <div className="flex-1 overflow-hidden">
-                  <DatabaseExplorer schema={missionData.schema} />
+                  <DatabaseExplorer
+                    schema={missionData.schema}
+                    onTablePreview={(tbl) => setPreviewTable(tbl)}
+                    onInsertQuery={(snippet) => {
+                      setSql(snippet);
+                      addToast({
+                        type: 'info',
+                        title: 'Query Loaded in Editor',
+                        message: 'Diagnostic template ready. Click Run Query to execute.'
+                      });
+                    }}
+                  />
                 </div>
 
                 <div className="shrink-0">
@@ -451,6 +462,15 @@ export function App() {
         onClose={() => setPreviewTable(null)}
         tableName={previewTable}
         schema={missionData.schema}
+        missionId={activeMissionId}
+        onInsertQuery={(snippet) => {
+          setSql(snippet);
+          addToast({
+            type: 'info',
+            title: 'Query Loaded in Editor',
+            message: 'Table query loaded into Monaco Editor.'
+          });
+        }}
       />
 
       {/* Real-time Progress and Action Alerts */}

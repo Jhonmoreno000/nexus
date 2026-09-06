@@ -20,18 +20,38 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({ user, onOpenIncident, onRe
       <header className="h-14 border-b border-[#15233d] bg-[#070b14] px-4 flex items-center justify-between z-20 select-none">
         {/* Left: Brand Logo + Environments */}
         <div className="flex items-center gap-6">
-          <div className="flex items-center gap-3 cursor-pointer">
-            {/* Stylized Cyan N Logo */}
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#06b6d4] to-[#0284c7] p-[1.5px] flex items-center justify-center glow-cyan-sm shadow-inner">
-              <div className="w-full h-full bg-[#070b14] rounded-[7px] flex items-center justify-center">
-                <span className="text-[#00e5ff] font-extrabold text-lg tracking-tighter font-mono">N</span>
+          <div className="flex items-center gap-3 cursor-pointer group">
+            {/* Stylized Cyan Origami N Logo matching Mockup */}
+            <div className="relative w-8 h-8 flex items-center justify-center">
+              <div className="absolute inset-0 bg-[#00e5ff]/20 rounded-lg blur-sm group-hover:bg-[#00e5ff]/40 transition-all"></div>
+              <div className="relative w-8 h-8 rounded-lg bg-[#070b14] border border-[#00e5ff]/40 p-1 flex items-center justify-center shadow-lg group-hover:border-[#00e5ff] transition-all">
+                <svg className="w-5 h-5" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 5C6 4.44772 6.44772 4 7 4H11.5C12.0523 4 12.5 4.44772 12.5 5V27C12.5 27.5523 12.0523 28 11.5 28H7C6.44772 28 6 27.5523 6 27V5Z" fill="url(#nexus-col1)" />
+                  <path d="M10 5L22 27H17L6.5 7.5L10 5Z" fill="url(#nexus-diag)" />
+                  <path d="M19.5 5C19.5 4.44772 19.9477 4 20.5 4H25C25.5523 4 26 4.44772 26 5V27C26 27.5523 25.5523 28 25 28H20.5C19.9477 28 19.5 27.5523 19.5 27V5Z" fill="url(#nexus-col2)" />
+                  <defs>
+                    <linearGradient id="nexus-col1" x1="6" y1="4" x2="12.5" y2="28" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#0284c7" />
+                      <stop offset="1" stopColor="#0369a1" />
+                    </linearGradient>
+                    <linearGradient id="nexus-diag" x1="6.5" y1="5" x2="22" y2="27" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#00e5ff" />
+                      <stop offset="0.6" stopColor="#38bdf8" />
+                      <stop offset="1" stopColor="#0284c7" />
+                    </linearGradient>
+                    <linearGradient id="nexus-col2" x1="19.5" y1="4" x2="26" y2="28" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#38bdf8" />
+                      <stop offset="1" stopColor="#00e5ff" />
+                    </linearGradient>
+                  </defs>
+                </svg>
               </div>
             </div>
             <div>
-              <div className="font-extrabold tracking-wider text-sm text-white font-mono flex items-center gap-1.5">
+              <div className="font-extrabold tracking-widest text-sm text-white font-mono flex items-center gap-1.5 leading-none">
                 NEXUS
               </div>
-              <div className="text-[10px] text-slate-400 font-medium tracking-wide">
+              <div className="text-[10px] text-slate-400 font-medium tracking-wide mt-0.5">
                 Learn. Build. Improve.
               </div>
             </div>
