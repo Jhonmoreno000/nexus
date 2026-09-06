@@ -1,4 +1,6 @@
-import fastify from 'fastify';
+const fs = require('fs');
+
+fs.writeFileSync('apps/api/src/server.ts', `import fastify from 'fastify';
 import cors from '@fastify/cors';
 import { MISSIONS_CATALOG, MissionDefinition } from './data/missions-catalog.js';
 import { PostgresMissionSandbox } from './sandbox/postgres-engine.js';
@@ -38,7 +40,7 @@ const queryHistory: {
     id: 'q-1',
     missionId: '1842',
     missionTitle: 'Payment Integrity',
-    sql: `SELECT o.id, p.id, t.id FROM orders o LEFT JOIN payments p ON p.order_id = o.id LEFT JOIN transactions t ON t.payment_id = p.id WHERE o.status = 'paid' AND t.id IS NULL LIMIT 100;`,
+    sql: \`SELECT o.id, p.id, t.id FROM orders o LEFT JOIN payments p ON p.order_id = o.id LEFT JOIN transactions t ON t.payment_id = p.id WHERE o.status = 'paid' AND t.id IS NULL LIMIT 100;\`,
     executionTimeMs: 42,
     rowCount: 284,
     status: 'SUCCESS',
@@ -49,7 +51,7 @@ const queryHistory: {
     id: 'q-2',
     missionId: '1021',
     missionTitle: 'Orphaned Customer Records',
-    sql: `SELECT * FROM orders WHERE customer_id NOT IN (SELECT id FROM customers);`,
+    sql: \`SELECT * FROM orders WHERE customer_id NOT IN (SELECT id FROM customers);\`,
     executionTimeMs: 18,
     rowCount: 2,
     status: 'SUCCESS',
@@ -178,7 +180,7 @@ app.post('/api/missions/:id/hint', async (req, reply) => {
   const hintInfo = mission.hints[level] || mission.hints[1];
 
   return {
-    diagnosis: `Analyzing query for ${mission.title}. Progressive hint level: ${level}/3.`,
+    diagnosis: \`Analyzing query for \${mission.title}. Progressive hint level: \${level}/3.\`,
     hintLevel: level,
     hint: hintInfo.hint,
     concept: hintInfo.concept,
@@ -225,7 +227,7 @@ const start = async () => {
   try {
     const port = Number(process.env.PORT) || 3001;
     await app.listen({ port, host: '0.0.0.0' });
-    console.log(`NEXUS API (PostgreSQL Real Engine) running at http://localhost:${port}`);
+    console.log(\`NEXUS API (PostgreSQL Real Engine) running at http://localhost:\${port}\`);
   } catch (err) {
     app.log.error(err);
     process.exit(1);
@@ -233,3 +235,6 @@ const start = async () => {
 };
 
 start();
+`, 'utf8');
+
+console.log('server.ts updated with real PostgreSQL engine and catalog.');
