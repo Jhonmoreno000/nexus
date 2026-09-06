@@ -1,0 +1,28 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: nexus_app
+      POSTGRES_USER: nexus_user
+      POSTGRES_PASSWORD: nexus_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata_dev:/var/lib/postgresql/data
+      - ./infrastructure/docker/postgres/init-sandbox.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - nexus-dev-net
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - nexus-dev-net
+
+volumes:
+  pgdata_dev:
+
+networks:
+  nexus-dev-net:
+    driver: bridge

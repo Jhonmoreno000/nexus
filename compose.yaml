@@ -1,0 +1,65 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+    networks:
+      - nexus-net
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - DATABASE_URL=postgres://nexus_user:nexus_password@postgres:5432/nexus_app
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - nexus-net
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: nexus_app
+      POSTGRES_USER: nexus_user
+      POSTGRES_PASSWORD: nexus_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./infrastructure/docker/postgres/init-sandbox.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nexus_user -d nexus_app"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nexus-net
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    networks:
+      - nexus-net
+
+volumes:
+  pgdata:
+  redisdata:
+
+networks:
+  nexus-net:
+    driver: bridge
