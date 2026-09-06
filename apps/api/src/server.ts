@@ -1,8 +1,9 @@
 import fastify from 'fastify';
 import cors from '@fastify/cors';
-import { MISSIONS_CATALOG, MissionDefinition } from './data/missions-catalog.js';
+import { MISSIONS_CATALOG } from './data/missions-catalog.js';
 import { PostgresMissionSandbox } from './sandbox/postgres-engine.js';
 import { SqlPolicyValidator } from './gateway/sql-policy.js';
+import { UserStore } from './data/user-store.js';
 
 const app = fastify({ logger: true });
 
@@ -11,7 +12,6 @@ await app.register(cors, {
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 });
 
-// Cache of live PostgreSQL sandboxes per mission
 const sandboxes = new Map<string, PostgresMissionSandbox>();
 
 function getSandbox(missionId: string): PostgresMissionSandbox {
@@ -22,49 +22,36 @@ function getSandbox(missionId: string): PostgresMissionSandbox {
   return sandboxes.get(missionId)!;
 }
 
-// In-memory query audit history
-const queryHistory: {
-  id: string;
-  missionId: string;
-  missionTitle: string;
-  sql: string;
-  executionTimeMs: number;
-  rowCount: number;
-  status: 'SUCCESS' | 'ERROR';
-  score?: number;
-  timestamp: string;
-}[] = [
-  {
-    id: 'q-1',
-    missionId: '1842',
-    missionTitle: 'Payment Integrity',
-    sql: `SELECT o.id, p.id, t.id FROM orders o LEFT JOIN payments p ON p.order_id = o.id LEFT JOIN transactions t ON t.payment_id = p.id WHERE o.status = 'paid' AND t.id IS NULL LIMIT 100;`,
-    executionTimeMs: 42,
-    rowCount: 284,
-    status: 'SUCCESS',
-    score: 100,
-    timestamp: '2026-09-06 13:45:10'
-  },
-  {
-    id: 'q-2',
-    missionId: '1021',
-    missionTitle: 'Orphaned Customer Records',
-    sql: `SELECT * FROM orders WHERE customer_id NOT IN (SELECT id FROM customers);`,
-    executionTimeMs: 18,
-    rowCount: 2,
-    status: 'SUCCESS',
-    score: 95,
-    timestamp: '2026-09-06 13:30:22'
-  }
-];
-
 // 1. Health check
 app.get('/api/health', async () => {
   return { status: 'healthy', timestamp: new Date().toISOString(), service: 'nexus-api', engine: 'PostgreSQL 16 (pg-mem)' };
 });
 
-// 2. List all playable missions / levels
+// 2. Real User Profile & Stats (Starts at 0% unless played)
+app.get('/api/user/profile', async () => {
+  return UserStore.get();
+});
+
+// 3. Reset User Progress
+app.post('/api/user/reset', async () => {
+  return UserStore.reset();
+});
+
+// 4. Complete Objective manually
+app.post('/api/user/objective-complete', async (req) => {
+  const { missionId, objectiveId } = req.body as { missionId: string; objectiveId: number };
+  return UserStore.completeObjective(missionId, objectiveId);
+});
+
+// 5. Unlock Hint via Quiz / Side Quest
+app.post('/api/user/unlock-hint', async (req) => {
+  const { missionId, level } = req.body as { missionId: string; level: number };
+  return UserStore.unlockHint(missionId, level);
+});
+
+// 6. List all playable missions / levels
 app.get('/api/missions', async () => {
+  const user = UserStore.get();
   return Object.values(MISSIONS_CATALOG).map((m) => ({
     id: m.id,
     incidentNumber: m.incidentNumber,
@@ -74,15 +61,18 @@ app.get('/api/missions', async () => {
     timeRemainingSeconds: m.timeRemainingSeconds,
     context: m.context,
     objectivesCount: m.objectives.length,
-    completed: m.id === '1842' ? true : false,
+    completed: user.completedMissions.includes(m.id),
     relatedTables: m.relatedTables
   }));
 });
 
-// 3. Get single mission details
-app.get('/api/missions/:id', async (req, reply) => {
+// 7. Get single mission details (including clean starter query, quizzes, and side quests)
+app.get('/api/missions/:id', async (req) => {
   const { id } = req.params as { id: string };
   const mission = MISSIONS_CATALOG[id] || MISSIONS_CATALOG['1842'];
+  const user = UserStore.get();
+  const completedObjs = user.completedObjectives[id] || [];
+
   return {
     id: mission.id,
     incidentNumber: mission.incidentNumber,
@@ -91,14 +81,20 @@ app.get('/api/missions/:id', async (req, reply) => {
     difficulty: mission.difficulty,
     timeRemainingSeconds: mission.timeRemainingSeconds,
     context: mission.context,
-    objectives: mission.objectives,
+    objectives: mission.objectives.map((o) => ({
+      ...o,
+      completed: completedObjs.includes(o.id)
+    })),
     relatedTables: mission.relatedTables,
     initialQuery: mission.initialQuery,
-    schema: mission.schemaTables
+    schema: mission.schemaTables,
+    quizQuestions: mission.quizQuestions,
+    sideQuests: mission.sideQuests,
+    unlockedHints: user.unlockedHints[id] || []
   };
 });
 
-// 4. Execute SQL against the mission's real PostgreSQL instance
+// 8. Execute SQL against the mission's real PostgreSQL instance
 app.post('/api/missions/:id/execute', async (req, reply) => {
   const { id } = req.params as { id: string };
   const body = req.body as { sql: string };
@@ -106,7 +102,6 @@ app.post('/api/missions/:id/execute', async (req, reply) => {
     return reply.status(400).send({ error: 'SQL query required' });
   }
 
-  // Policy check
   const policy = SqlPolicyValidator.validate(body.sql);
   if (!policy.allowed) {
     return reply.status(403).send({ success: false, error: policy.reason, columns: [], rows: [], rowCount: 0, executionTimeMs: 5 });
@@ -115,29 +110,28 @@ app.post('/api/missions/:id/execute', async (req, reply) => {
   const sandbox = getSandbox(id);
   const result = sandbox.execute(body.sql);
 
-  // Record into history
-  queryHistory.unshift({
-    id: 'q-' + Date.now(),
+  // Record real query in persistent user store
+  const mission = MISSIONS_CATALOG[id] || MISSIONS_CATALOG['1842'];
+  UserStore.recordQuery({
     missionId: id,
-    missionTitle: MISSIONS_CATALOG[id]?.title || 'Incident #' + id,
+    missionTitle: mission.title,
     sql: body.sql,
     executionTimeMs: result.executionTimeMs,
     rowCount: result.rowCount,
-    status: result.success ? 'SUCCESS' : 'ERROR',
-    timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19)
+    status: result.success ? 'SUCCESS' : 'ERROR'
   });
 
   return result;
 });
 
-// Fallback execute for legacy /api/sql/execute
-app.post('/api/sql/execute', async (req, reply) => {
+// Fallback execute
+app.post('/api/sql/execute', async (req) => {
   const body = req.body as { sql: string };
   const sandbox = getSandbox('1842');
   return sandbox.execute(body.sql);
 });
 
-// 5. Multi-layer Evaluation for mission
+// 9. Multi-layer Evaluation for mission
 app.post('/api/missions/:id/evaluate', async (req, reply) => {
   const { id } = req.params as { id: string };
   const body = req.body as { sql: string };
@@ -161,15 +155,17 @@ app.post('/api/missions/:id/evaluate', async (req, reply) => {
 
   const evalResult = mission.evaluator(body.sql, execResult.rows);
 
-  // Update latest history entry score
-  if (queryHistory[0]) {
-    queryHistory[0].score = evalResult.totalScore;
+  if (evalResult.passed) {
+    // Persist real progress: mark objectives and mission completed!
+    UserStore.completeObjective(id, 1);
+    UserStore.completeObjective(id, 2);
+    UserStore.completeMission(id);
   }
 
   return evalResult;
 });
 
-// 6. Socratic AI Tutor Hints
+// 10. Socratic AI Tutor Hints (Only available if unlocked!)
 app.post('/api/missions/:id/hint', async (req, reply) => {
   const { id } = req.params as { id: string };
   const body = req.body as { level: number };
@@ -177,19 +173,22 @@ app.post('/api/missions/:id/hint', async (req, reply) => {
   const level = Math.min(Math.max(1, body.level || 1), 3);
   const hintInfo = mission.hints[level] || mission.hints[1];
 
+  const user = UserStore.get();
+  const unlocked = (user.unlockedHints[id] || []).includes(level);
+
   return {
     diagnosis: `Analyzing query for ${mission.title}. Progressive hint level: ${level}/3.`,
     hintLevel: level,
-    hint: hintInfo.hint,
+    isUnlocked: unlocked,
+    hint: unlocked ? hintInfo.hint : 'Hint locked. Complete the Concept Verification Quiz or Side Quest to unlock this hint!',
     concept: hintInfo.concept,
-    nextQuestion: hintInfo.nextQuestion,
-    codeSnippet: hintInfo.codeSnippet
+    nextQuestion: unlocked ? hintInfo.nextQuestion : 'Take the quiz to test your SQL reasoning.',
+    codeSnippet: unlocked ? hintInfo.codeSnippet : undefined
   };
 });
 
-// 7. Database Lab Endpoints
+// 11. Database Lab Endpoints
 app.get('/api/lab/tables', async () => {
-  const sandbox = getSandbox('1842');
   return [
     { name: 'customers', rows: 5, description: 'Customer identity accounts' },
     { name: 'orders', rows: 5, description: 'Financial order headers' },
@@ -199,25 +198,36 @@ app.get('/api/lab/tables', async () => {
   ];
 });
 
-app.post('/api/lab/execute', async (req, reply) => {
+app.post('/api/lab/execute', async (req) => {
   const body = req.body as { sql: string };
   const sandbox = getSandbox('1842');
-  return sandbox.execute(body.sql || 'SELECT 1;');
+  const result = sandbox.execute(body.sql || 'SELECT 1;');
+  UserStore.recordQuery({
+    missionId: 'lab',
+    missionTitle: 'Database Lab Scratchpad',
+    sql: body.sql,
+    executionTimeMs: result.executionTimeMs,
+    rowCount: result.rowCount,
+    status: result.success ? 'SUCCESS' : 'ERROR'
+  });
+  return result;
 });
 
-// 8. History Endpoint
+// 12. History Endpoint (Real persistent history)
 app.get('/api/history', async () => {
-  return queryHistory;
+  return UserStore.get().queryHistory;
 });
 
-// 9. Skills Progression Endpoint
+// 13. Skills Progression Endpoint
 app.get('/api/skills/:userId', async () => {
+  const user = UserStore.get();
+  const progressRatio = user.completedMissions.length / 6;
   return [
-    { skillId: 'sql-fundamentals', name: 'SQL Fundamentals', percentage: 92, level: 'Mastered', icon: 'Code' },
-    { skillId: 'relational-thinking', name: 'Relational Thinking', percentage: 82, level: 'Advanced', icon: 'Cpu' },
-    { skillId: 'data-modeling', name: 'Data Modeling', percentage: 67, level: 'Intermediate', icon: 'Database' },
-    { skillId: 'debugging', name: 'Debugging & Diagnostics', percentage: 74, level: 'Advanced', icon: 'Bug' },
-    { skillId: 'optimization', name: 'Optimization & Plans', percentage: 51, level: 'Intermediate', icon: 'Gauge' }
+    { skillId: 'sql-fundamentals', name: 'SQL Fundamentals', percentage: Math.min(100, Math.round(progressRatio * 100)), level: 'Mastered', icon: 'Code' },
+    { skillId: 'relational-thinking', name: 'Relational Thinking', percentage: Math.min(100, Math.round(progressRatio * 85)), level: 'Advanced', icon: 'Cpu' },
+    { skillId: 'data-modeling', name: 'Data Modeling', percentage: Math.min(100, Math.round(progressRatio * 75)), level: 'Intermediate', icon: 'Database' },
+    { skillId: 'debugging', name: 'Debugging & Diagnostics', percentage: Math.min(100, Math.round(progressRatio * 80)), level: 'Advanced', icon: 'Bug' },
+    { skillId: 'optimization', name: 'Optimization & Plans', percentage: Math.min(100, Math.round(progressRatio * 60)), level: 'Intermediate', icon: 'Gauge' }
   ];
 });
 
@@ -225,7 +235,7 @@ const start = async () => {
   try {
     const port = Number(process.env.PORT) || 3001;
     await app.listen({ port, host: '0.0.0.0' });
-    console.log(`NEXUS API (PostgreSQL Real Engine) running at http://localhost:${port}`);
+    console.log(`NEXUS API (Persistent Store Active) running at http://localhost:${port}`);
   } catch (err) {
     app.log.error(err);
     process.exit(1);

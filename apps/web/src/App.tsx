@@ -7,9 +7,11 @@ import { SqlEditor } from './components/SqlEditor';
 import { QueryResults } from './components/QueryResults';
 import { DatabaseExplorer } from './components/DatabaseExplorer';
 import { SkillsProgress } from './components/SkillsProgress';
-import { AiTutorModal } from './components/AiTutorModal';
+import { HintUnlockModal } from './components/modals/HintUnlockModal';
 import { EvaluationModal } from './components/EvaluationModal';
 import { TablePreviewModal } from './components/modals/TablePreviewModal';
+import { ToastNotification, ToastMessage } from './components/ui/ToastNotification';
+import { UserProfileData } from './components/modals/ProfileModal';
 import { DashboardView } from './components/views/DashboardView';
 import { MissionsView } from './components/views/MissionsView';
 import { DatabaseLabView } from './components/views/DatabaseLabView';
@@ -20,33 +22,58 @@ import { SettingsView } from './components/views/SettingsView';
 import { QueryResult, EvaluationResult, SchemaTable } from './types';
 import { ChevronLeft } from 'lucide-react';
 
-const DEFAULT_SQL_1842 = `SELECT
+const DEFAULT_STARTER_1842 = `-- Incident #1842: Payment Integrity Investigation
+-- Write your diagnostic query to locate paid orders lacking transactions.
+
+SELECT
     o.id AS order_id,
     o.customer_id,
-    o.status,
+    o.status AS order_status,
     p.id AS payment_id,
-    p.status AS payment_status,
-    t.id AS transaction_id,
-    t.status AS transaction_status
+    t.id AS transaction_id
 FROM orders o
-LEFT JOIN payments p ON p.order_id = o.id
-LEFT JOIN transactions t ON t.payment_id = p.id
-WHERE o.status = 'paid'
-  AND t.id IS NULL
-LIMIT 100;`;
+-- HINT: Investigate the relationship with payments and transactions
+-- Join tables and find missing records
+LIMIT 25;`;
 
 const INITIAL_ROWS = [
   { order_id: 10001, customer_id: 3421, status: 'paid', payment_id: 5601, payment_status: 'paid', transaction_id: null, transaction_status: null },
   { order_id: 10002, customer_id: 1876, status: 'paid', payment_id: 5602, payment_status: 'paid', transaction_id: 8821, transaction_status: 'completed' },
-  { order_id: 10003, customer_id: 2390, status: 'paid', payment_id: 5603, payment_status: 'paid', transaction_id: null, transaction_status: null },
-  { order_id: 10004, customer_id: 4502, status: 'paid', payment_id: 5604, payment_status: 'paid', transaction_id: 8834, transaction_status: 'completed' },
-  { order_id: 10005, customer_id: 6123, status: 'paid', payment_id: 5605, payment_status: 'paid', transaction_id: 8835, transaction_status: 'completed' }
+  { order_id: 10003, customer_id: 2390, status: 'paid', payment_id: 5603, payment_status: 'paid', transaction_id: null, transaction_status: null }
 ];
 
 export function App() {
   const [activeTab, setActiveTab] = useState('missions');
   const [activeMissionId, setActiveMissionId] = useState('1842');
   const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(true);
+
+  // Real Persistent User State (Starts clean from 0)
+  const [user, setUser] = useState<UserProfileData>({
+    name: 'Jhon Moreno',
+    username: 'Jhonmoreno000',
+    role: 'Database Engineering Trainee',
+    level: 1,
+    xp: 0,
+    rankTitle: 'Level 1 Trainee',
+    completedMissions: [],
+    queriesExecuted: 0,
+    badges: []
+  });
+
+  // Real-time Toast Notifications
+  const [toasts, setToasts] = useState<ToastMessage[]>([]);
+
+  const addToast = (toast: Omit<ToastMessage, 'id'>) => {
+    const id = Math.random().toString(36).substring(7);
+    setToasts((prev) => [...prev, { ...toast, id }]);
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 5000);
+  };
+
+  const removeToast = (id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  };
 
   // Mission State
   const [missionData, setMissionData] = useState<{
@@ -61,6 +88,9 @@ export function App() {
     relatedTables: string[];
     initialQuery: string;
     schema: SchemaTable[];
+    quizQuestions?: any[];
+    sideQuests?: any[];
+    unlockedHints?: number[];
   }>({
     id: '1842',
     incidentNumber: 1842,
@@ -68,19 +98,19 @@ export function App() {
     domain: 'Fintech / Payments',
     difficulty: 'Advanced',
     timeRemainingSeconds: 1458,
-    context: "The payment system is showing inconsistencies. 3.7% of orders appear as paid, but they don't have a transaction associated. This is affecting customer trust and revenue reconciliation.",
+    context: "The payment system is showing inconsistencies. 3.7% of orders appear as paid, but they do not have a transaction associated. This is affecting customer trust and revenue reconciliation.",
     objectives: [
-      { id: 1, title: '1. Identify the affected records', description: 'Find orders marked as paid without a transaction.', completed: true },
+      { id: 1, title: '1. Identify the affected records', description: 'Find orders marked as paid without a transaction.', completed: false },
       { id: 2, title: '2. Determine the root cause', description: 'Analyze the data and relationships between tables.', completed: false },
       { id: 3, title: '3. Propose a solution', description: 'Suggest a fix to prevent this issue in the future.', completed: false },
       { id: 4, title: '4. Verify the integrity', description: 'Confirm that the data is consistent after your changes.', completed: false }
     ],
     relatedTables: ['orders', 'payments', 'transactions', 'refunds'],
-    initialQuery: DEFAULT_SQL_1842,
+    initialQuery: DEFAULT_STARTER_1842,
     schema: []
   });
 
-  const [sql, setSql] = useState(DEFAULT_SQL_1842);
+  const [sql, setSql] = useState(DEFAULT_STARTER_1842);
   const [isRunning, setIsRunning] = useState(false);
   const [isHintOpen, setIsHintOpen] = useState(false);
   const [isEvalOpen, setIsEvalOpen] = useState(false);
@@ -91,10 +121,28 @@ export function App() {
   const [queryResults, setQueryResults] = useState<QueryResult>({
     columns: ['order_id', 'customer_id', 'status', 'payment_id', 'payment_status', 'transaction_id', 'transaction_status'],
     rows: INITIAL_ROWS,
-    rowCount: 284,
-    executionTimeMs: 42,
+    rowCount: 3,
+    executionTimeMs: 24,
     success: true
   });
+
+  // Fetch real user profile from backend
+  const fetchUserProfile = async () => {
+    try {
+      const res = await fetch('/api/user/profile');
+      if (res.ok) {
+        const data = await res.json();
+        setUser(data);
+      }
+    } catch (e) {
+      console.error('Failed to fetch user profile:', e);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserProfile();
+    loadMission('1842');
+  }, []);
 
   // Load Mission from API
   const loadMission = async (id: string) => {
@@ -107,6 +155,25 @@ export function App() {
         const data = await res.json();
         setMissionData(data);
         setSql(data.initialQuery || '');
+      }
+    } catch (e) {
+      console.error('Failed to load mission:', e);
+    }
+  };
+
+  // Reset Progress Handler
+  const handleResetProgress = async () => {
+    try {
+      const res = await fetch('/api/user/reset', { method: 'POST' });
+      if (res.ok) {
+        const data = await res.json();
+        setUser(data);
+        await loadMission(activeMissionId);
+        addToast({
+          type: 'info',
+          title: 'Simulation Reset',
+          message: 'All scores, unlocked hints, and completed objectives have been reset to zero.'
+        });
       }
     } catch (e) {
       console.error(e);
@@ -125,6 +192,12 @@ export function App() {
       if (res.ok) {
         const data = await res.json();
         setQueryResults(data);
+        addToast({
+          type: 'query',
+          title: 'Query Executed',
+          message: `PostgreSQL executed in ${data.executionTimeMs}ms (${data.rowCount} rows returned).`
+        });
+        fetchUserProfile();
       } else {
         const err = await res.json();
         setQueryResults({
@@ -134,6 +207,11 @@ export function App() {
           executionTimeMs: 12,
           success: false,
           error: err.error || 'PostgreSQL Engine execution error'
+        });
+        addToast({
+          type: 'info',
+          title: 'Query Error',
+          message: err.error || 'Syntax or relational validation failed.'
         });
       }
     } catch (err: any) {
@@ -162,11 +240,25 @@ export function App() {
         const data = await res.json();
         setEvalResult(data);
         if (data.passed) {
-          // Auto-mark objective as completed
+          addToast({
+            type: 'mission',
+            title: 'Incident Resolved!',
+            message: `All test cases passed with a score of ${data.totalScore}/100. Progress saved!`,
+            xp: 200
+          });
+          // Refresh user data (XP, level, completed missions)
+          await fetchUserProfile();
+          // Update mission data objectives as completed
           setMissionData((prev) => ({
             ...prev,
-            objectives: prev.objectives.map((o) => (o.id === 1 ? { ...o, completed: true } : o))
+            objectives: prev.objectives.map((o) => ({ ...o, completed: true }))
           }));
+        } else {
+          addToast({
+            type: 'info',
+            title: 'Evaluation Incomplete',
+            message: 'Some assertions did not pass. Check the evaluation report for details.'
+          });
         }
       } else {
         const err = await res.json();
@@ -184,6 +276,33 @@ export function App() {
     setIsEvalOpen(true);
   };
 
+  // Handle Hint Unlocked via Quiz or Side Quest
+  const handleHintUnlocked = async (level: number) => {
+    try {
+      const res = await fetch('/api/user/unlock-hint', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ missionId: activeMissionId, level })
+      });
+      if (res.ok) {
+        const updatedUser = await res.json();
+        setUser(updatedUser);
+        addToast({
+          type: 'hint',
+          title: `Hint Level ${level} Unlocked!`,
+          message: 'Quiz/Side Quest passed! Socratic architectural hint is now available.',
+          xp: 25
+        });
+        setMissionData((prev: any) => ({
+          ...prev,
+          unlockedHints: [...(prev.unlockedHints || []), level]
+        }));
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleSidebarTabChange = (tab: string) => {
     setActiveTab(tab);
     if (tab === 'missions') {
@@ -195,18 +314,29 @@ export function App() {
 
   return (
     <div className="flex flex-col h-screen w-screen bg-[#070b14] overflow-hidden text-slate-100">
-      {/* 1. Top Navbar with Modals */}
-      <TopNavbar onOpenIncident={(id) => loadMission(id)} />
+      {/* 1. Top Navbar with Modals and User Profile */}
+      <TopNavbar
+        user={user}
+        onOpenIncident={(id) => loadMission(id)}
+        onResetProgress={handleResetProgress}
+      />
 
       {/* 2. Main Layout (Sidebar + Body) */}
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar activeTab={activeTab} setActiveTab={handleSidebarTabChange} />
+        <Sidebar
+          activeTab={activeTab}
+          setActiveTab={handleSidebarTabChange}
+          completedMissionsCount={user.completedMissions.length}
+          totalMissionsCount={6}
+        />
 
         {/* 3. Main Views Router */}
-        {activeTab === 'dashboard' && <DashboardView onSelectMission={loadMission} />}
+        {activeTab === 'dashboard' && (
+          <DashboardView onSelectMission={loadMission} user={user} />
+        )}
         {activeTab === 'database-lab' && <DatabaseLabView />}
-        {activeTab === 'skills' && <SkillsView />}
-        {activeTab === 'career' && <CareerView />}
+        {activeTab === 'skills' && <SkillsView user={user} />}
+        {activeTab === 'career' && <CareerView user={user} />}
         {activeTab === 'history' && (
           <HistoryView
             onLoadQuery={(mId, qSql) => {
@@ -224,7 +354,7 @@ export function App() {
 
         {activeTab === 'missions' && isWorkspaceOpen && (
           <div className="flex-1 flex flex-col overflow-hidden bg-[#070b14]">
-            {/* Incident Header (with catalog switcher button) */}
+            {/* Incident Header */}
             <div className="relative">
               <IncidentHeader
                 incidentNumber={missionData.incidentNumber}
@@ -282,7 +412,7 @@ export function App() {
                 </div>
 
                 <div className="shrink-0">
-                  <SkillsProgress />
+                  <SkillsProgress completedMissionsCount={user.completedMissions.length} />
                 </div>
               </div>
             </div>
@@ -290,11 +420,24 @@ export function App() {
         )}
       </div>
 
-      {/* Interactive Modals */}
-      <AiTutorModal
+      {/* Gamified Hint Unlock Modal (Fisher-Yates Randomized Quiz & Side Quests) */}
+      <HintUnlockModal
         isOpen={isHintOpen}
         onClose={() => setIsHintOpen(false)}
-        onSelectSnippet={(code) => setSql(code)}
+        missionId={activeMissionId}
+        missionTitle={missionData.title}
+        quizQuestions={missionData.quizQuestions || []}
+        sideQuests={missionData.sideQuests || []}
+        unlockedHintLevels={missionData.unlockedHints || []}
+        onHintUnlocked={handleHintUnlocked}
+        onRunSideQuest={(snippet) => {
+          setSql(snippet);
+          addToast({
+            type: 'info',
+            title: 'Diagnostic Snippet Loaded',
+            message: 'Side quest SQL copied to editor. Click "Run Query" to inspect records.'
+          });
+        }}
       />
 
       <EvaluationModal
@@ -309,6 +452,9 @@ export function App() {
         tableName={previewTable}
         schema={missionData.schema}
       />
+
+      {/* Real-time Progress and Action Alerts */}
+      <ToastNotification toasts={toasts} onDismiss={removeToast} />
     </div>
   );
 }

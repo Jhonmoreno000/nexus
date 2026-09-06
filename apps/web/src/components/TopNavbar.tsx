@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { Bell, Database } from 'lucide-react';
-import { ProfileModal } from './modals/ProfileModal';
+import { ProfileModal, UserProfileData } from './modals/ProfileModal';
 import { NotificationsModal } from './modals/NotificationsModal';
 import { EnvironmentModal } from './modals/EnvironmentModal';
 
 interface TopNavbarProps {
+  user: UserProfileData;
   onOpenIncident?: (id: string) => void;
+  onResetProgress: () => void;
 }
 
-export const TopNavbar: React.FC<TopNavbarProps> = ({ onOpenIncident }) => {
+export const TopNavbar: React.FC<TopNavbarProps> = ({ user, onOpenIncident, onResetProgress }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isEnvOpen, setIsEnvOpen] = useState(false);
@@ -59,7 +61,6 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({ onOpenIncident }) => {
 
         {/* Right: Notifications & User Profile */}
         <div className="flex items-center gap-4">
-          {/* Notification Bell */}
           <button
             onClick={() => setIsNotifOpen(true)}
             title="Notifications & Incident Alerts"
@@ -69,27 +70,27 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({ onOpenIncident }) => {
             <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#06b6d4] animate-pulse"></span>
           </button>
 
-          {/* User Card */}
+          {/* Real User Card */}
           <div
             onClick={() => setIsProfileOpen(true)}
-            title="View Alex Rivera Profile & Stats"
+            title="View Profile & Career Stats"
             className="flex items-center gap-2.5 pl-2 border-l border-[#1a2942] cursor-pointer group"
           >
             <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#0284c7] to-[#06b6d4] p-[1.5px] flex items-center justify-center group-hover:scale-105 transition-transform">
               <div className="w-full h-full bg-[#0a1120] rounded-full flex items-center justify-center text-xs font-bold text-cyan-300">
-                AR
+                JM
               </div>
             </div>
             <div className="flex flex-col text-left">
-              <span className="text-xs font-semibold text-slate-100 group-hover:text-cyan-300 transition-colors">Alex Rivera</span>
-              <span className="text-[10px] text-slate-400">Junior Developer</span>
+              <span className="text-xs font-semibold text-slate-100 group-hover:text-cyan-300 transition-colors">{user.name}</span>
+              <span className="text-[10px] text-slate-400">{user.rankTitle}</span>
             </div>
           </div>
         </div>
       </header>
 
       {/* Modals */}
-      <ProfileModal isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+      <ProfileModal isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} user={user} onResetProgress={onResetProgress} />
       <NotificationsModal isOpen={isNotifOpen} onClose={() => setIsNotifOpen(false)} onOpenIncident={onOpenIncident} />
       <EnvironmentModal isOpen={isEnvOpen} onClose={() => setIsEnvOpen(false)} />
     </>

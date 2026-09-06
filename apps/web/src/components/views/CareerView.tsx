@@ -1,13 +1,53 @@
 import React from 'react';
-import { Briefcase, Award, CheckCircle2, Lock, TrendingUp, FileText } from 'lucide-react';
+import { Briefcase, Award, CheckCircle2, Lock, TrendingUp, Zap } from 'lucide-react';
+import { UserProfileData } from '../modals/ProfileModal';
 
-export const CareerView: React.FC = () => {
+interface CareerViewProps {
+  user: UserProfileData;
+}
+
+export const CareerView: React.FC<CareerViewProps> = ({ user }) => {
   const ladder = [
-    { rank: 'Intern Database Developer', status: 'Completed', salary: '$45,000', xp: '1000 XP', current: false },
-    { rank: 'Junior Database Developer', status: 'Current Role', salary: '$78,000', xp: '3500 / 5000 XP', current: true },
-    { rank: 'Mid-Level Database Engineer', status: 'Locked', salary: '$115,000', xp: '10,000 XP', current: false },
-    { rank: 'Senior Data Infrastructure Engineer', status: 'Locked', salary: '$165,000', xp: '25,000 XP', current: false },
-    { rank: 'Principal Database Architect', status: 'Locked', salary: '$220,000', xp: '50,000 XP', current: false }
+    {
+      id: 1,
+      rank: 'Database Engineering Trainee',
+      status: user.xp >= 500 ? 'Completed' : 'Current Role',
+      salary: '$45,000',
+      reqXp: 500,
+      current: user.xp < 500
+    },
+    {
+      id: 2,
+      rank: 'Junior Database Developer',
+      status: user.xp >= 1500 ? 'Completed' : user.xp >= 500 ? 'Current Role' : 'Locked',
+      salary: '$78,000',
+      reqXp: 1500,
+      current: user.xp >= 500 && user.xp < 1500
+    },
+    {
+      id: 3,
+      rank: 'Mid-Level Database Engineer',
+      status: user.xp >= 5000 ? 'Completed' : user.xp >= 1500 ? 'Current Role' : 'Locked',
+      salary: '$115,000',
+      reqXp: 5000,
+      current: user.xp >= 1500 && user.xp < 5000
+    },
+    {
+      id: 4,
+      rank: 'Senior Data Infrastructure Engineer',
+      status: user.xp >= 10000 ? 'Completed' : user.xp >= 5000 ? 'Current Role' : 'Locked',
+      salary: '$165,000',
+      reqXp: 10000,
+      current: user.xp >= 5000 && user.xp < 10000
+    },
+    {
+      id: 5,
+      rank: 'Principal Database Architect',
+      status: user.xp >= 20000 ? 'Current Role' : 'Locked',
+      salary: '$220,000',
+      reqXp: 20000,
+      current: user.xp >= 20000
+    }
   ];
 
   return (
@@ -19,18 +59,18 @@ export const CareerView: React.FC = () => {
           </div>
           <div>
             <h1 className="text-xl font-bold text-white">Engineering Career Ladder</h1>
-            <p className="text-xs text-slate-400">Professional progression, simulated company tickets, and sprint reviews</p>
+            <p className="text-xs text-slate-400">Professional progression for {user.name} (@{user.username})</p>
           </div>
         </div>
 
-        <div className="px-3.5 py-1.5 rounded-xl bg-[#0b1426] border border-[#172f5c] text-xs font-semibold text-emerald-400 flex items-center gap-2">
-          <TrendingUp className="w-3.5 h-3.5" />
-          <span>Performance Rating: Exceeds Expectations</span>
+        <div className="px-3.5 py-1.5 rounded-xl bg-[#0b1426] border border-[#172f5c] text-xs font-semibold text-cyan-300 flex items-center gap-2">
+          <Zap className="w-3.5 h-3.5 text-[#00e5ff]" />
+          <span>Current XP: {user.xp} • Level {user.level}</span>
         </div>
       </div>
 
       <div className="space-y-3">
-        {ladder.map((step, idx) => (
+        {ladder.map((step) => (
           <div
             key={step.rank}
             className={`p-4 rounded-xl border transition-all flex items-center justify-between ${
@@ -42,29 +82,35 @@ export const CareerView: React.FC = () => {
             }`}
           >
             <div className="flex items-center gap-4">
-              <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold font-mono ${
-                step.current ? 'bg-[#00e5ff] text-[#070b14]' : 'bg-[#121f36] text-slate-400'
-              }`}>
-                0{idx + 1}
+              <div
+                className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold font-mono ${
+                  step.current ? 'bg-[#00e5ff] text-[#070b14]' : 'bg-[#121f36] text-slate-400'
+                }`}
+              >
+                0{step.id}
               </div>
               <div>
                 <h3 className="text-sm font-bold text-white">{step.rank}</h3>
-                <span className="text-xs text-slate-400 font-mono">Simulated Target: {step.salary} • {step.xp}</span>
+                <span className="text-xs text-slate-400 font-mono">
+                  Market Reference: {step.salary} • Threshold: {step.reqXp} XP
+                </span>
               </div>
             </div>
 
             <div>
               {step.current ? (
                 <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#00e5ff]/15 text-[#00e5ff] border border-[#00e5ff]/40">
-                  CURRENT ROLE
+                  CURRENT ROLE ({user.xp} / {step.reqXp} XP)
                 </span>
               ) : step.status === 'Completed' ? (
-                <span className="flex items-center gap-1 text-xs text-emerald-400 font-semibold">
-                  <CheckCircle2 className="w-4 h-4" /> Completed
+                <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-950/40 text-emerald-400 border border-emerald-800/40 flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>MASTERED</span>
                 </span>
               ) : (
-                <span className="flex items-center gap-1 text-xs text-slate-500 font-semibold">
-                  <Lock className="w-4 h-4" /> Locked
+                <span className="px-3 py-1 rounded-full text-xs font-bold bg-slate-900 text-slate-500 border border-slate-800 flex items-center gap-1">
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>LOCKED</span>
                 </span>
               )}
             </div>
