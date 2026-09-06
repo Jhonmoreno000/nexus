@@ -1,4 +1,6 @@
-import React from 'react';
+const fs = require('fs');
+
+fs.writeFileSync('apps/web/src/components/MissionBriefing.tsx', `import React from 'react';
 import { BookOpen, Table2 } from 'lucide-react';
 
 interface Objective {
@@ -52,26 +54,26 @@ export const MissionBriefing: React.FC<MissionBriefingProps> = ({
                 <div
                   key={obj.id}
                   onClick={() => onObjectiveSelect(obj.id)}
-                  className={`p-2.5 rounded-lg border transition-all duration-150 cursor-pointer ${
+                  className={\`p-2.5 rounded-lg border transition-all duration-150 cursor-pointer \${
                     isSelected
                       ? 'bg-[#0f1d36] border-[#0284c7]/60 shadow-sm'
                       : 'bg-[#080d19] border-[#15233d] hover:border-[#1e3357]'
-                  }`}
+                  }\`}
                 >
                   <div className="flex items-start gap-2.5">
                     <div
-                      className={`w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 mt-0.5 ${
+                      className={\`w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 mt-0.5 \${
                         obj.completed
                           ? 'bg-[#06b6d4] text-[#070b14]'
                           : isSelected
                           ? 'bg-[#0284c7] text-white'
                           : 'bg-[#142036] text-slate-400'
-                      }`}
+                      }\`}
                     >
                       {obj.id}
                     </div>
                     <div className="space-y-0.5">
-                      <div className={`text-xs font-semibold ${isSelected ? 'text-white' : 'text-slate-200'}`}>
+                      <div className={\`text-xs font-semibold \${isSelected ? 'text-white' : 'text-slate-200'}\`}>
                         {obj.title}
                       </div>
                       <p className="text-[11px] text-slate-400 leading-snug">
@@ -107,3 +109,6 @@ export const MissionBriefing: React.FC<MissionBriefingProps> = ({
     </div>
   );
 };
+`, 'utf8');
+
+console.log('MissionBriefing.tsx updated.');

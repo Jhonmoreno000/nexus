@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+const fs = require('fs');
+
+fs.writeFileSync('apps/web/src/components/TopNavbar.tsx', `import React, { useState } from 'react';
 import { Bell, Database } from 'lucide-react';
 import { ProfileModal } from './modals/ProfileModal';
 import { NotificationsModal } from './modals/NotificationsModal';
@@ -95,3 +97,6 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({ onOpenIncident }) => {
     </>
   );
 };
+`, 'utf8');
+
+console.log('TopNavbar.tsx updated with interactive modals.');

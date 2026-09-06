@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+const fs = require('fs');
+
+fs.writeFileSync('apps/web/src/App.tsx', `import React, { useState, useEffect } from 'react';
 import { TopNavbar } from './components/TopNavbar';
 import { Sidebar } from './components/Sidebar';
 import { IncidentHeader } from './components/IncidentHeader';
@@ -20,7 +22,7 @@ import { SettingsView } from './components/views/SettingsView';
 import { QueryResult, EvaluationResult, SchemaTable } from './types';
 import { ChevronLeft } from 'lucide-react';
 
-const DEFAULT_SQL_1842 = `SELECT
+const DEFAULT_SQL_1842 = \`SELECT
     o.id AS order_id,
     o.customer_id,
     o.status,
@@ -33,7 +35,7 @@ LEFT JOIN payments p ON p.order_id = o.id
 LEFT JOIN transactions t ON t.payment_id = p.id
 WHERE o.status = 'paid'
   AND t.id IS NULL
-LIMIT 100;`;
+LIMIT 100;\`;
 
 const INITIAL_ROWS = [
   { order_id: 10001, customer_id: 3421, status: 'paid', payment_id: 5601, payment_status: 'paid', transaction_id: null, transaction_status: null },
@@ -102,7 +104,7 @@ export function App() {
     setIsWorkspaceOpen(true);
     setActiveTab('missions');
     try {
-      const res = await fetch(`/api/missions/${id}`);
+      const res = await fetch(\`/api/missions/\${id}\`);
       if (res.ok) {
         const data = await res.json();
         setMissionData(data);
@@ -117,7 +119,7 @@ export function App() {
   const handleRunQuery = async () => {
     setIsRunning(true);
     try {
-      const res = await fetch(`/api/missions/${activeMissionId}/execute`, {
+      const res = await fetch(\`/api/missions/\${activeMissionId}/execute\`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sql })
@@ -153,7 +155,7 @@ export function App() {
   // Submit Solution against Real Multi-layer Evaluator
   const handleSubmitSolution = async () => {
     try {
-      const res = await fetch(`/api/missions/${activeMissionId}/evaluate`, {
+      const res = await fetch(\`/api/missions/\${activeMissionId}/evaluate\`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sql })
@@ -314,3 +316,6 @@ export function App() {
 }
 
 export default App;
+`, 'utf8');
+
+console.log('App.tsx fully wired with all views, modals, and real PG engine.');
