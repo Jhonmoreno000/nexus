@@ -1,4 +1,4 @@
-# 🚀 NEXUS — Database Engineering Simulator
+#  NEXUS — Database Engineering Simulator
 
 <div align="center">
 
@@ -27,13 +27,13 @@
 
 ---
 
-## 📸 Vista Previa del Simulador
+##  Vista Previa del Simulador
 
 ![NEXUS Database Engineering Simulator](assets/nexus-simulator-preview.png)
 
 ---
 
-## 💡 Filosofía y Visión del Proyecto
+##  Filosofía y Visión del Proyecto
 
 La mayoría de los cursos de SQL tradicionales son cuestionarios estáticos y teóricos de sintaxis básica. No preparan a los ingenieros para la realidad del desarrollo: **bloqueos por concurrencia (deadlocks), anomalías de integridad referencial, registros huérfanos, reconciliación contable y optimización de planes de ejecución**.
 
@@ -45,7 +45,7 @@ La mayoría de los cursos de SQL tradicionales son cuestionarios estáticos y te
 
 ---
 
-## 🏛️ Arquitectura del Sistema
+##  Arquitectura del Sistema
 
 El proyecto está diseñado como un monorepo modular de alta velocidad y baja fricción para desarrollo local y despliegue en contenedores:
 
@@ -84,7 +84,7 @@ El proyecto está diseñado como un monorepo modular de alta velocidad y baja fr
 
 ---
 
-## 🎮 Catálogo de Incidentes Jugables
+##  Catálogo de Incidentes Jugables
 
 | Incidente | Título | Dominio | Dificultad | Habilidades Evaluadas |
 | :--- | :--- | :--- | :---: | :--- |
@@ -97,7 +97,7 @@ El proyecto está diseñado como un monorepo modular de alta velocidad y baja fr
 
 ---
 
-## 🧩 Sistema de Ayudas Socráticas y Gamificación
+##  Sistema de Ayudas Socráticas y Gamificación
 
 Para garantizar que el aprendizaje sea significativo y no una simple copia de código:
 
@@ -114,7 +114,7 @@ Para garantizar que el aprendizaje sea significativo y no una simple copia de c�
 
 ---
 
-## 🛠️ Estructura del Monorepo
+##  Estructura del Monorepo
 
 ```bash
 nexus/
@@ -147,7 +147,7 @@ nexus/
 
 ---
 
-## 🚀 Guía de Instalación y Despliegue
+##  Guía de Instalación y Despliegue
 
 ### Prerrequisitos
 - [Node.js](https://nodejs.org/) v18.0.0 o superior.
@@ -207,7 +207,7 @@ Ambos servicios se iniciarán automáticamente:
 
 ---
 
-## 📡 Referencia de la API
+##  Referencia de la API
 
 | Método | Endpoint | Descripción |
 | :--- | :--- | :--- |
@@ -222,7 +222,7 @@ Ambos servicios se iniciarán automáticamente:
 
 ---
 
-## 👥 Perfil y Créditos
+##  Perfil y Créditos
 
 - **Proyecto**: NEXUS — Database Engineering Simulator
 - **Autor / Ingeniero**: Jhon Moreno ([@Jhonmoreno000](https://github.com/Jhonmoreno000))
