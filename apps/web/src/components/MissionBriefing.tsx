@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { BookOpen, Table2, Check } from 'lucide-react';
 
 interface Objective {
@@ -26,25 +26,27 @@ export const MissionBriefing: React.FC<MissionBriefingProps> = ({
   onTableClick
 }) => {
   return (
-    <div className="h-full flex flex-col justify-between p-4 bg-[#070c17]/90 backdrop-blur-md border-r border-slate-800/60 overflow-y-auto select-none">
-      <div className="space-y-5">
+    <div className="h-full flex flex-col justify-between p-6 bg-[#0a0e17] border-r border-white/5 overflow-y-auto select-none font-sans">
+      <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center gap-2 text-slate-100 font-bold text-sm border-b border-slate-800/60 pb-3">
-          <BookOpen className="w-4 h-4 text-sky-400" />
+        <div className="flex items-center gap-3 text-white font-semibold text-sm pb-4 border-b border-white/5">
+          <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center">
+            <BookOpen className="w-4 h-4 text-blue-400" />
+          </div>
           <span>Mission Briefing</span>
         </div>
 
         {/* Context */}
-        <div className="space-y-1.5">
-          <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Context</h3>
-          <p className="text-xs text-slate-300 leading-relaxed font-normal">
+        <div className="space-y-2">
+          <h3 className="text-xs font-semibold text-slate-500 tracking-wide uppercase">Context</h3>
+          <p className="text-[13px] text-slate-300 leading-relaxed font-medium">
             {context}
           </p>
         </div>
 
         {/* Your Objectives */}
         <div className="space-y-3">
-          <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Your Objectives</h3>
+          <h3 className="text-xs font-semibold text-slate-500 tracking-wide uppercase">Objectives</h3>
           <div className="space-y-2">
             {objectives.map((obj) => {
               const isSelected = activeObjectiveId === obj.id;
@@ -52,29 +54,29 @@ export const MissionBriefing: React.FC<MissionBriefingProps> = ({
                 <div
                   key={obj.id}
                   onClick={() => onObjectiveSelect(obj.id)}
-                  className={`p-2.5 rounded-xl border transition-all duration-150 cursor-pointer ${
+                  className={`p-3 rounded-2xl border transition-all cursor-pointer ${
                     isSelected
-                      ? 'bg-sky-950/20 border-sky-500/35 shadow-sm'
-                      : 'bg-slate-900/40 border-slate-800/50 hover:border-slate-700/60'
+                      ? 'bg-blue-500/10 border-blue-500/30'
+                      : 'bg-white/5 border-white/5 hover:bg-white/10'
                   }`}
                 >
-                  <div className="flex items-start gap-2.5">
+                  <div className="flex items-start gap-3">
                     <div
-                      className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5 border ${
+                      className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 border ${
                         obj.completed
-                          ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400'
+                          ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
                           : isSelected
-                          ? 'bg-sky-500/15 border-sky-500/30 text-sky-300'
-                          : 'bg-slate-800/60 border-slate-700/50 text-slate-400'
+                          ? 'bg-blue-500 border-blue-500 text-white'
+                          : 'bg-white/5 border-white/10 text-slate-400'
                       }`}
                     >
-                      {obj.completed ? <Check className="w-3 h-3" /> : obj.id}
+                      {obj.completed ? <Check className="w-3.5 h-3.5" /> : obj.id}
                     </div>
                     <div className="space-y-0.5">
-                      <div className={`text-xs font-semibold ${isSelected ? 'text-white' : 'text-slate-200'}`}>
+                      <div className={`text-sm font-semibold tracking-tight ${isSelected ? 'text-white' : 'text-slate-200'}`}>
                         {obj.title}
                       </div>
-                      <div className="text-[11px] text-slate-400 leading-snug">
+                      <div className="text-xs text-slate-400 leading-relaxed font-medium">
                         {obj.description}
                       </div>
                     </div>
@@ -87,16 +89,16 @@ export const MissionBriefing: React.FC<MissionBriefingProps> = ({
       </div>
 
       {/* Related Tables */}
-      <div className="pt-4 border-t border-slate-800/60 space-y-2">
-        <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Related Tables</h3>
-        <div className="flex flex-wrap gap-1.5">
+      <div className="pt-5 border-t border-white/5 space-y-3">
+        <h3 className="text-xs font-semibold text-slate-500 tracking-wide uppercase">Related Tables</h3>
+        <div className="flex flex-wrap gap-2">
           {relatedTables.map((tbl) => (
             <button
               key={tbl}
               onClick={() => onTableClick?.(tbl)}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-900/60 hover:bg-slate-800/70 border border-slate-800/60 hover:border-sky-500/40 text-xs font-mono text-slate-300 hover:text-sky-300 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/5 hover:border-blue-500/40 text-[13px] font-medium text-slate-300 hover:text-white transition-all active:scale-95"
             >
-              <Table2 className="w-3 h-3 text-slate-400" />
+              <Table2 className="w-3.5 h-3.5 text-blue-400 opacity-80" />
               <span>{tbl}</span>
             </button>
           ))}

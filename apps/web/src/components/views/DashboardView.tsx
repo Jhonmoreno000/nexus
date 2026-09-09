@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Play, TrendingUp, CheckCircle2, ShieldCheck, Zap, Award, ArrowRight } from 'lucide-react';
 import { UserProfileData } from '../modals/ProfileModal';
 
@@ -17,7 +17,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectMission, u
       num: 1021,
       title: 'Orphaned Customer Records',
       difficulty: 'Beginner',
-      badgeColor: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20',
+      badgeColor: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
       description: 'Foreign key discrepancies in the orders pipeline. Find records with invalid customer references.'
     },
     {
@@ -25,7 +25,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectMission, u
       num: 1842,
       title: 'Payment Integrity',
       difficulty: 'Advanced',
-      badgeColor: 'bg-sky-500/10 text-sky-300 border-sky-500/20',
+      badgeColor: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
       description: 'Orders marked as paid without ledger transaction records. Multi-hop LEFT JOIN anti-pattern.'
     },
     {
@@ -33,129 +33,135 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectMission, u
       num: 2045,
       title: 'Fraudulent Refund Velocity',
       difficulty: 'Expert',
-      badgeColor: 'bg-purple-500/10 text-purple-300 border-purple-500/20',
+      badgeColor: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
       description: 'Automated refund bursts detected across terminals. Use SQL Window Functions to flag velocity anomalies.'
     }
   ];
 
   return (
-    <div className="flex-1 p-6 overflow-y-auto bg-[#070b14] space-y-6 select-none font-sans">
-      {/* Welcome Banner with Refined Translucent Gradient */}
-      <div className="p-6 rounded-2xl bg-slate-900/60 backdrop-blur-md border border-slate-800/70 flex items-center justify-between shadow-xl">
-        <div className="space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-300 text-xs font-medium">
-            <Zap className="w-3.5 h-3.5" />
-            <span>OPERATIONAL SIMULATION ACTIVE</span>
+    <div className="flex-1 p-8 overflow-y-auto bg-black space-y-8 select-none font-sans">
+      {/* Native iOS style Welcome Banner */}
+      <div className="p-8 rounded-[2rem] bg-gradient-to-br from-blue-900/20 to-indigo-900/10 border border-white/5 flex items-center justify-between shadow-2xl relative overflow-hidden">
+        <div className="absolute inset-0 bg-blue-500/5 blur-3xl rounded-full"></div>
+        <div className="space-y-3 relative z-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-bold tracking-wide uppercase">
+            <Zap className="w-3 h-3" />
+            <span>Active Session</span>
           </div>
-          <h1 className="text-2xl font-bold text-slate-100 tracking-wide">
+          <h1 className="text-3xl font-bold text-white tracking-tight">
             Welcome back, {user.name}
           </h1>
-          <p className="text-xs text-slate-400 max-w-xl leading-relaxed">
-            Operating as <span className="text-sky-300 font-mono">@{user.username}</span>. Database Sandbox is synchronized. Tackle real-world incidents to climb the engineering ladder.
+          <p className="text-sm text-slate-400 max-w-xl font-medium leading-relaxed">
+            Operating as <span className="text-blue-400">@{user.username}</span>. Database Sandbox is synchronized. Tackle real-world incidents to climb the engineering ladder.
           </p>
         </div>
 
         <button
           onClick={() => onSelectMission('1842')}
-          className="flex items-center gap-2.5 px-5 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-semibold text-xs tracking-wider shadow-md shadow-sky-950/40 transition-all active:scale-95"
+          className="relative z-10 flex items-center gap-3 px-6 py-3.5 rounded-full bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm tracking-wide shadow-xl shadow-blue-500/20 transition-all active:scale-95"
         >
           <Play className="w-4 h-4 fill-current" />
-          <span>RESUME INCIDENT #1842</span>
+          <span>Resume Incident #1842</span>
         </button>
       </div>
 
       {/* KPI Stats Grid */}
-      <div className="grid grid-cols-4 gap-4">
-        <div className="p-4 rounded-xl bg-slate-900/40 backdrop-blur-sm border border-slate-800/60 space-y-2">
-          <div className="flex items-center justify-between text-slate-400 text-xs">
-            <span>Total Queries Executed</span>
-            <Zap className="w-4 h-4 text-sky-400" />
+      <div className="grid grid-cols-4 gap-5">
+        <div className="p-5 rounded-3xl bg-[#0a0e17] border border-white/5 space-y-2 hover:bg-[#0c121e] transition-colors">
+          <div className="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wide">
+            <span>Queries Executed</span>
+            <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center">
+              <Zap className="w-4 h-4 text-blue-400" />
+            </div>
           </div>
-          <div className="text-2xl font-bold text-slate-100 font-mono">{user.queriesExecuted}</div>
-          <div className="text-[11px] text-slate-500 font-medium">
-            <span>Recorded in PostgreSQL sandbox</span>
-          </div>
+          <div className="text-3xl font-bold text-white tracking-tighter">{user.queriesExecuted}</div>
+          <div className="text-xs text-slate-500 font-medium">Recorded in PG sandbox</div>
         </div>
 
-        <div className="p-4 rounded-xl bg-slate-900/40 backdrop-blur-sm border border-slate-800/60 space-y-2">
-          <div className="flex items-center justify-between text-slate-400 text-xs">
-            <span>Current Experience</span>
-            <Award className="w-4 h-4 text-amber-400" />
+        <div className="p-5 rounded-3xl bg-[#0a0e17] border border-white/5 space-y-2 hover:bg-[#0c121e] transition-colors">
+          <div className="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wide">
+            <span>Experience</span>
+            <div className="w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center">
+              <Award className="w-4 h-4 text-amber-400" />
+            </div>
           </div>
-          <div className="text-2xl font-bold text-slate-100 font-mono">{user.xp} XP</div>
-          <div className="text-[11px] text-amber-400/80 font-medium">Earned through solutions & quizzes</div>
+          <div className="text-3xl font-bold text-white tracking-tighter">{user.xp} <span className="text-lg text-slate-500">XP</span></div>
+          <div className="text-xs text-amber-500/80 font-medium">Earned through solutions</div>
         </div>
 
-        <div className="p-4 rounded-xl bg-slate-900/40 backdrop-blur-sm border border-slate-800/60 space-y-2">
-          <div className="flex items-center justify-between text-slate-400 text-xs">
+        <div className="p-5 rounded-3xl bg-[#0a0e17] border border-white/5 space-y-2 hover:bg-[#0c121e] transition-colors">
+          <div className="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wide">
             <span>Incidents Solved</span>
-            <ShieldCheck className="w-4 h-4 text-sky-400" />
+            <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center">
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+            </div>
           </div>
-          <div className="text-2xl font-bold text-slate-100 font-mono">{completedCount} / 6</div>
-          <div className="text-[11px] text-sky-400/80 font-medium">Rank: {user.rankTitle}</div>
+          <div className="text-3xl font-bold text-white tracking-tighter">{completedCount} <span className="text-lg text-slate-500">/ 6</span></div>
+          <div className="text-xs text-emerald-500/80 font-medium">{user.rankTitle}</div>
         </div>
 
-        <div className="p-4 rounded-xl bg-slate-900/40 backdrop-blur-sm border border-slate-800/60 space-y-2">
-          <div className="flex items-center justify-between text-slate-400 text-xs">
+        <div className="p-5 rounded-3xl bg-[#0a0e17] border border-white/5 space-y-2 hover:bg-[#0c121e] transition-colors">
+          <div className="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wide">
             <span>Promotion Progress</span>
-            <TrendingUp className="w-4 h-4 text-indigo-400" />
+            <div className="w-8 h-8 rounded-full bg-indigo-500/10 flex items-center justify-center">
+              <TrendingUp className="w-4 h-4 text-indigo-400" />
+            </div>
           </div>
-          <div className="text-2xl font-bold text-slate-100 font-mono">{promotionPercent}%</div>
-          <div className="text-[11px] text-indigo-300/80">Target: Junior Database Developer</div>
+          <div className="text-3xl font-bold text-white tracking-tighter">{promotionPercent}%</div>
+          <div className="text-xs text-indigo-400/80 font-medium">Target: Junior Database Dev</div>
         </div>
       </div>
 
       {/* Incidents Queue */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold text-slate-200 uppercase tracking-wider">
-            Incident Dispatch Queue
+      <div className="space-y-4">
+        <div className="flex items-center justify-between px-1">
+          <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest">
+            Dispatch Queue
           </h2>
-          <span className="text-xs text-slate-500 font-mono">6 Incidents Available</span>
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-6">
           {missionsSummary.map((m) => {
             const isCompleted = user.completedMissions.includes(m.id);
             return (
               <div
                 key={m.id}
-                className={`p-4 rounded-xl border transition-all space-y-3 flex flex-col justify-between ${
+                className={`p-6 rounded-3xl border transition-all duration-300 space-y-4 flex flex-col justify-between shadow-lg ${
                   isCompleted
-                    ? 'border-emerald-500/30 bg-emerald-950/10'
-                    : 'border-slate-800/60 bg-slate-900/30 hover:border-slate-700/80'
+                    ? 'border-emerald-500/20 bg-emerald-950/10'
+                    : 'border-white/5 bg-[#0a0e17] hover:bg-[#111622] hover:border-blue-500/30'
                 }`}
               >
-                <div className="space-y-1.5">
+                <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold text-sky-400">#{m.num}</span>
-                    <div className="flex items-center gap-1.5">
+                    <span className="text-sm font-bold text-blue-400 tracking-tight">#{m.num}</span>
+                    <div className="flex items-center gap-2">
                       {isCompleted && (
-                        <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 font-medium border border-emerald-500/20 flex items-center gap-1">
+                        <span className="text-[10px] px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/20 flex items-center gap-1 uppercase tracking-wide">
                           <CheckCircle2 className="w-3 h-3" />
-                          <span>SOLVED</span>
+                          <span>Solved</span>
                         </span>
                       )}
-                      <span className={`text-[10px] px-2 py-0.5 rounded font-medium border ${m.badgeColor}`}>
+                      <span className={`text-[10px] px-2.5 py-1 rounded-full font-bold border uppercase tracking-wide ${m.badgeColor}`}>
                         {m.difficulty}
                       </span>
                     </div>
                   </div>
-                  <h3 className="text-sm font-bold text-slate-100">{m.title}</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed line-clamp-2">
+                  <h3 className="text-base font-bold text-white tracking-tight">{m.title}</h3>
+                  <p className="text-[13px] text-slate-400 leading-relaxed font-medium line-clamp-2">
                     {m.description}
                   </p>
                 </div>
                 <button
                   onClick={() => onSelectMission(m.id)}
-                  className={`w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium transition-colors ${
+                  className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all active:scale-95 ${
                     isCompleted
-                      ? 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 hover:bg-emerald-500/15'
-                      : 'bg-slate-800/60 hover:bg-slate-700/60 text-slate-200 border border-slate-700/50'
+                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20'
+                      : 'bg-white/5 hover:bg-white/10 text-white'
                   }`}
                 >
-                  <span>{isCompleted ? 'Review Investigation' : 'Investigate'}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <span>{isCompleted ? 'Review Logs' : 'Investigate'}</span>
+                  <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
             );

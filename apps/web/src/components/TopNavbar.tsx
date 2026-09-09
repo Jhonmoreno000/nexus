@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Bell, Database } from 'lucide-react';
+﻿import React, { useState } from 'react';
+import { Bell, Database, ChevronDown } from 'lucide-react';
 import { ProfileModal, UserProfileData } from './modals/ProfileModal';
 import { NotificationsModal } from './modals/NotificationsModal';
 import { EnvironmentModal } from './modals/EnvironmentModal';
@@ -17,89 +17,67 @@ export const TopNavbar: React.FC<TopNavbarProps> = ({ user, onOpenIncident, onRe
 
   return (
     <>
-      <header className="h-14 border-b border-slate-800/60 bg-[#070c17]/90 backdrop-blur-md px-4 flex items-center justify-between z-20 select-none">
+      <header className="h-16 border-b border-white/5 bg-[#0a0e17] px-6 flex items-center justify-between z-20 select-none font-sans">
         {/* Left: Brand Logo + Environments */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-8">
           <div className="flex items-center gap-3 cursor-pointer group">
-            {/* Elegant Translucent Origami Logo */}
-            <div className="relative w-8 h-8 rounded-lg bg-slate-900/80 border border-slate-700/50 p-1 flex items-center justify-center shadow-md group-hover:border-sky-500/50 transition-all">
-              <svg className="w-5 h-5" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 5C6 4.44772 6.44772 4 7 4H11.5C12.0523 4 12.5 4.44772 12.5 5V27C12.5 27.5523 12.0523 28 11.5 28H7C6.44772 28 6 27.5523 6 27V5Z" fill="url(#nexus-col1)" />
-                <path d="M10 5L22 27H17L6.5 7.5L10 5Z" fill="url(#nexus-diag)" />
-                <path d="M19.5 5C19.5 4.44772 19.9477 4 20.5 4H25C25.5523 4 26 4.44772 26 5V27C26 27.5523 25.5523 28 25 28H20.5C19.9477 28 19.5 27.5523 19.5 27V5Z" fill="url(#nexus-col2)" />
-                <defs>
-                  <linearGradient id="nexus-col1" x1="6" y1="4" x2="12.5" y2="28" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#0369a1" />
-                    <stop offset="1" stopColor="#0284c7" />
-                  </linearGradient>
-                  <linearGradient id="nexus-diag" x1="6.5" y1="5" x2="22" y2="27" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#38bdf8" />
-                    <stop offset="0.6" stopColor="#0ea5e9" />
-                    <stop offset="1" stopColor="#0284c7" />
-                  </linearGradient>
-                  <linearGradient id="nexus-col2" x1="19.5" y1="4" x2="26" y2="28" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#7dd3fc" />
-                    <stop offset="1" stopColor="#38bdf8" />
-                  </linearGradient>
-                </defs>
-              </svg>
+            {/* Native App Icon Style Logo */}
+            <div className="w-9 h-9 rounded-2xl bg-blue-500 text-white flex items-center justify-center shadow-lg shadow-blue-500/20">
+              <Database className="w-4 h-4" />
             </div>
             <div>
-              <div className="font-extrabold tracking-widest text-sm text-slate-100 font-mono flex items-center gap-1.5 leading-none">
+              <div className="font-bold tracking-tight text-[15px] text-white flex items-center gap-1.5 leading-none">
                 NEXUS
               </div>
-              <div className="text-[10px] text-slate-400 font-medium tracking-wide mt-0.5">
-                Learn. Build. Improve.
+              <div className="text-[11px] text-slate-400 font-medium mt-0.5">
+                Database Engineer
               </div>
             </div>
           </div>
 
-          {/* Environment Pills with Soft Translucent Colors */}
-          <div className="flex items-center gap-2 text-xs">
+          {/* Environment Pills - Apple Style */}
+          <div className="hidden md:flex items-center gap-2">
             <button
               onClick={() => setIsEnvOpen(true)}
-              title="Inspect Environment Status"
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/15 transition-colors font-medium tracking-wide text-[11px]"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/15 active:scale-95 transition-all font-semibold tracking-tight text-[11px]"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-              STAGING ENVIRONMENT
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              STAGING
             </button>
 
             <button
               onClick={() => setIsEnvOpen(true)}
-              title="Inspect Database Engine"
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/60 border border-slate-800/70 text-slate-300 hover:border-slate-700 transition-colors font-medium text-[11px]"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 text-slate-300 hover:bg-white/10 active:scale-95 transition-all font-semibold tracking-tight text-[11px]"
             >
-              <Database className="w-3.5 h-3.5 text-sky-400" />
+              <Database className="w-3 h-3 text-blue-400" />
               <span>PostgreSQL 16</span>
             </button>
           </div>
         </div>
 
         {/* Right: Notifications & User Profile */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-5">
           <button
             onClick={() => setIsNotifOpen(true)}
-            title="Notifications & Incident Alerts"
-            className="relative p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/50 transition-colors"
+            className="relative w-10 h-10 flex items-center justify-center rounded-full text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 active:scale-95 transition-all"
           >
             <Bell className="w-4 h-4" />
-            <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+            <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-blue-500 border-2 border-[#0a0e17]"></span>
           </button>
 
-          {/* Real User Card with Soft Border & Translucent Tag */}
+          {/* iOS Style Profile Button */}
           <div
             onClick={() => setIsProfileOpen(true)}
-            title="View Profile & Career Stats"
-            className="flex items-center gap-2.5 pl-2 border-l border-slate-800/60 cursor-pointer group"
+            className="flex items-center gap-3 pl-5 border-l border-white/10 cursor-pointer group active:scale-95 transition-transform"
           >
-            <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700/60 flex items-center justify-center text-xs font-bold text-sky-300 group-hover:border-sky-500/40 transition-colors">
+            <div className="flex flex-col text-right">
+              <span className="text-[13px] font-semibold text-slate-200 group-hover:text-white tracking-tight">{user.name}</span>
+              <span className="text-[11px] text-slate-400 font-medium">{user.rankTitle}</span>
+            </div>
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shadow-md">
               JM
             </div>
-            <div className="flex flex-col text-left">
-              <span className="text-xs font-semibold text-slate-200 group-hover:text-sky-300 transition-colors">{user.name}</span>
-              <span className="text-[10px] text-slate-400">{user.rankTitle}</span>
-            </div>
+            <ChevronDown className="w-4 h-4 text-slate-500 group-hover:text-slate-300 transition-colors" />
           </div>
         </div>
       </header>

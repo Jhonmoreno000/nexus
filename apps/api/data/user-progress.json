@@ -7,9 +7,50 @@
   "rankTitle": "Level 1 Trainee",
   "completedMissions": [],
   "completedObjectives": {},
-  "queriesExecuted": 0,
+  "queriesExecuted": 4,
   "unlockedHints": {},
   "unlockedSideQuests": {},
   "badges": [],
-  "queryHistory": []
+  "queryHistory": [
+    {
+      "id": "q-1788803066412",
+      "missionId": "1842",
+      "missionTitle": "Payment Integrity",
+      "sql": "SELECT * FROM payments LIMIT 5;",
+      "executionTimeMs": 12,
+      "rowCount": 5,
+      "status": "SUCCESS",
+      "timestamp": "2026-09-07 17:44:26"
+    },
+    {
+      "id": "q-1788803061128",
+      "missionId": "1842",
+      "missionTitle": "Payment Integrity",
+      "sql": "-- INCIDENT #1842: Payment Integrity Investigation\n-- Task: Identify orders marked as 'paid' that lack a corresponding transaction.\n-- Tables available: orders, payments, transactions, refunds\n\nSELECT\n    o.id AS order_id,\n    o.customer_id,\n    o.status AS order_status\nFROM orders o\nLIMIT 10;",
+      "executionTimeMs": 14,
+      "rowCount": 5,
+      "status": "SUCCESS",
+      "timestamp": "2026-09-07 17:44:21"
+    },
+    {
+      "id": "q-1788803047932",
+      "missionId": "1140",
+      "missionTitle": "Cart Abandonment Analytics",
+      "sql": "-- INCIDENT #1140: Cart Abandonment Analytics\n-- Goal: Calculate total abandoned cart values and filter for carts worth > $100.\n-- Tables: carts (id, user_id, status), cart_items (id, cart_id, product_id, quantity, unit_price)\n\nSELECT\n    c.id AS cart_id,\n    c.user_id,\n    c.status\nFROM carts c\nWHERE c.status = 'abandoned'\n2sggs\nLIMIT ",
+      "executionTimeMs": 27,
+      "rowCount": 0,
+      "status": "ERROR",
+      "timestamp": "2026-09-07 17:44:07"
+    },
+    {
+      "id": "q-1788727913066",
+      "missionId": "1842",
+      "missionTitle": "Payment Integrity",
+      "sql": "-- INCIDENT #1842: Payment Integrity Investigation\n-- Task: Identify orders marked as 'paid' that lack a corresponding transaction.\n-- Tables available: orders, payments, transactions, refunds\n\nSELECT\n    o.id AS order_id,\n    o.customer_id,\n    o.status AS order_status\nFROM orders o\nLIMIT 10;",
+      "executionTimeMs": 69,
+      "rowCount": 5,
+      "status": "SUCCESS",
+      "timestamp": "2026-09-06 20:51:53"
+    }
+  ]
 }

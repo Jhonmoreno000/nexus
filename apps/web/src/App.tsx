@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { TopNavbar } from './components/TopNavbar';
 import { Sidebar } from './components/Sidebar';
 import { IncidentHeader } from './components/IncidentHeader';
@@ -313,7 +313,7 @@ export function App() {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-[#070b14] overflow-hidden text-slate-100">
+    <div className="flex flex-col h-screen w-screen bg-black overflow-hidden text-slate-100">
       {/* 1. Top Navbar with Modals and User Profile */}
       <TopNavbar
         user={user}
@@ -353,7 +353,7 @@ export function App() {
         )}
 
         {activeTab === 'missions' && isWorkspaceOpen && (
-          <div className="flex-1 flex flex-col overflow-hidden bg-[#070b14]">
+          <div className="flex-1 flex flex-col overflow-hidden bg-black">
             {/* Incident Header */}
             <div className="relative">
               <IncidentHeader
@@ -365,7 +365,7 @@ export function App() {
               />
               <button
                 onClick={() => setIsWorkspaceOpen(false)}
-                className="absolute right-72 top-3.5 flex items-center gap-1 text-xs text-slate-400 hover:text-cyan-300 font-medium px-2.5 py-1 rounded-lg bg-[#0c1527] border border-[#172b4c] transition-colors"
+                className="absolute right-72 top-3.5 flex items-center gap-1 text-xs text-slate-400 hover:text-cyan-300 font-medium px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 transition-colors"
                 title="View all 6 incidents"
               >
                 <ChevronLeft className="w-3.5 h-3.5" />
@@ -388,7 +388,7 @@ export function App() {
               </div>
 
               {/* Column 2: Center Editor & Live Query Results */}
-              <div className="col-span-6 h-full flex flex-col overflow-hidden border-r border-[#15233d]">
+              <div className="col-span-6 h-full flex flex-col overflow-hidden border-r border-white/5">
                 <div className="h-[52%] overflow-hidden">
                   <SqlEditor
                     sql={sql}
