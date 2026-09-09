@@ -45,7 +45,10 @@ const INITIAL_ROWS = [
 export function App() {
   const [activeTab, setActiveTab] = useState('missions');
   const [activeMissionId, setActiveMissionId] = useState('1842');
+  const [activeObjectiveId, setActiveObjectiveId] = useState(1);
   const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(true);
+  const [previewTable, setPreviewTable] = useState<string | null>(null);
+  const [isMissionLoading, setIsMissionLoading] = useState(false);
 
   // Real Persistent User State (Starts clean from 0)
   const [user, setUser] = useState<UserProfileData>({
@@ -115,8 +118,7 @@ export function App() {
   const [isHintOpen, setIsHintOpen] = useState(false);
   const [isEvalOpen, setIsEvalOpen] = useState(false);
   const [evalResult, setEvalResult] = useState<EvaluationResult | null>(null);
-  const [previewTable, setPreviewTable] = useState<string | null>(null);
-  const [activeObjectiveId, setActiveObjectiveId] = useState(1);
+
 
   const [queryResults, setQueryResults] = useState<QueryResult>({
     columns: ['order_id', 'customer_id', 'status', 'payment_id', 'payment_status', 'transaction_id', 'transaction_status'],
@@ -138,13 +140,6 @@ export function App() {
       console.error('Failed to fetch user profile:', e);
     }
   };
-
-  useEffect(() => {
-    fetchUserProfile();
-    loadMission('1842');
-  }, []);
-
-  const [isMissionLoading, setIsMissionLoading] = useState(false);
 
   // Core Mission Engine
   const loadMission = async (id: string) => {
@@ -168,6 +163,27 @@ export function App() {
       setIsMissionLoading(false);
     }
   };
+
+  // Load Mission from API
+  useEffect(() => {
+    const initializeApp = async () => {
+      await Promise.all([
+        fetchUserProfile(),
+        loadMission('1842')
+      ]);
+      
+      // Hide global preloader once React has mounted and data is ready
+      setTimeout(() => {
+        const preloader = document.getElementById('global-preloader');
+        if (preloader) {
+          preloader.classList.add('hide');
+          setTimeout(() => preloader.remove(), 1000); // Remove from DOM after fade out
+        }
+      }, 300); // small artificial delay for visual smoothness
+    };
+
+    initializeApp();
+  }, []);
 
   // Reset Progress Handler
   const handleResetProgress = async () => {

@@ -7,11 +7,21 @@
   "rankTitle": "Level 1 Trainee",
   "completedMissions": [],
   "completedObjectives": {},
-  "queriesExecuted": 11,
+  "queriesExecuted": 12,
   "unlockedHints": {},
   "unlockedSideQuests": {},
   "badges": [],
   "queryHistory": [
+    {
+      "id": "q-1788919140948",
+      "missionId": "1842",
+      "missionTitle": "Payment Integrity",
+      "sql": "-- INCIDENT #1842: Payment Integrity Investigation\n-- Task: Identify orders marked as 'paid' that lack a corresponding transaction.\n-- Tables available: orders, payments, transactions, refunds\n\nSELECT\n    o.id AS order_id,\n    o.customer_id,\n    o.status AS order_status\nFROM orders o\nLIMIT 10;",
+      "executionTimeMs": 209,
+      "rowCount": 5,
+      "status": "SUCCESS",
+      "timestamp": "2026-09-09 01:59:00"
+    },
     {
       "id": "q-1788914658398",
       "missionId": "1842",

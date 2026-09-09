@@ -1,15 +1,97 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2306b6d4' stroke-width='2.5'><path d='M4 4v16L20 4v16'/></svg>" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2.5'><path d='M4 4v16L20 4v16'/></svg>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NEXUS — Database Engineering Simulator</title>
+    <title>NEXUS - Database Engineering Simulator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      #global-preloader {
+        position: fixed;
+        inset: 0;
+        background-color: #0a0e17;
+        z-index: 999999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      #global-preloader.hide {
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(1.05);
+      }
+      .preloader-core {
+        width: 60px;
+        height: 60px;
+        position: relative;
+        margin-bottom: 24px;
+      }
+      .preloader-ring {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 3px solid transparent;
+      }
+      .preloader-ring:nth-child(1) {
+        border-top-color: #3b82f6;
+        border-bottom-color: #3b82f6;
+        animation: preloader-spin 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+      }
+      .preloader-ring:nth-child(2) {
+        border-right-color: #6366f1;
+        border-left-color: #6366f1;
+        animation: preloader-spin 2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite reverse;
+        inset: 10px;
+      }
+      .preloader-ring:nth-child(3) {
+        border-top-color: #8b5cf6;
+        animation: preloader-spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+        inset: 20px;
+      }
+      .preloader-text {
+        color: white;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-weight: 800;
+        font-size: 28px;
+        letter-spacing: 4px;
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: preloader-pulse 1.5s ease-in-out infinite alternate;
+        padding-left: 4px; /* for letter spacing centering */
+      }
+      .preloader-subtext {
+        color: #94a3b8;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        margin-top: 12px;
+        letter-spacing: 2px;
+        opacity: 0.7;
+      }
+      @keyframes preloader-spin {
+        100% { transform: rotate(360deg); }
+      }
+      @keyframes preloader-pulse {
+        0% { opacity: 0.5; filter: drop-shadow(0 0 2px rgba(59,130,246,0)); }
+        100% { opacity: 1; filter: drop-shadow(0 0 15px rgba(59,130,246,0.6)); }
+      }
+    </style>
   </head>
-  <body class="bg-[#070b14] text-slate-100 font-['Plus_Jakarta_Sans',sans-serif] antialiased overflow-hidden select-none">
+  <body class="bg-[#0a0e17] text-slate-100 font-['Plus_Jakarta_Sans',sans-serif] antialiased overflow-hidden select-none">
+    <div id="global-preloader">
+      <div class="preloader-core">
+        <div class="preloader-ring"></div>
+        <div class="preloader-ring"></div>
+        <div class="preloader-ring"></div>
+      </div>
+      <div class="preloader-text">NEXUS</div>
+      <div class="preloader-subtext">INITIALIZING ENGINE...</div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
