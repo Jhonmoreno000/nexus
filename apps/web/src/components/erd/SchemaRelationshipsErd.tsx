@@ -1,4 +1,4 @@
-﻿import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Database, Key, Link2, ExternalLink, Code, Maximize2, ZoomIn, ZoomOut, Move } from 'lucide-react';
 import { SchemaTable } from '../../types';
 
@@ -64,6 +64,12 @@ export const SchemaRelationshipsErd: React.FC<SchemaRelationshipsErdProps> = ({
 
   // Exact same width as Studio to keep everything mathematically 1:1
   const CARD_WIDTH = 220; 
+
+  // Reset pan and zoom when schema changes (e.g. changing missions)
+  useEffect(() => {
+    setPan({ x: 0, y: 0 });
+    setZoom(0.35); // Reset to default Mini ERD scale
+  }, [schema, setZoom]);
 
   const { tableConfigs, relations } = useMemo(() => {
     const configs: Record<string, { columns: string[] }> = {};

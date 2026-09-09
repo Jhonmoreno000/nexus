@@ -29,7 +29,7 @@
 
 ##  Vista Previa del Simulador
 
-![NEXUS Database Engineering Simulator](assets/nexus-simulator-preview.png)
+![NEXUS Database Engineering Simulator](assets/nexus-preview-v2.png)
 
 ---
 

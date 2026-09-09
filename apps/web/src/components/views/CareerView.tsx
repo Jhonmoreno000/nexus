@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Briefcase, Award, CheckCircle2, Lock, TrendingUp, Zap } from 'lucide-react';
 import { UserProfileData } from '../modals/ProfileModal';
 
@@ -51,64 +51,73 @@ export const CareerView: React.FC<CareerViewProps> = ({ user }) => {
   ];
 
   return (
-    <div className="flex-1 p-6 overflow-y-auto bg-[#070b14] space-y-6 select-none">
-      <div className="flex items-center justify-between border-b border-[#14233c] pb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-[#0284c7]/20 border border-[#00e5ff]/40 flex items-center justify-center">
-            <Briefcase className="w-5 h-5 text-[#00e5ff]" />
+    <div className="flex-1 p-8 overflow-y-auto bg-[#0a0e17] space-y-8 select-none font-sans relative">
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.15]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
+      
+      <div className="flex items-center justify-between z-10 relative border-b border-white/5 pb-6">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 border border-white/10 flex items-center justify-center shadow-lg shadow-blue-500/20">
+            <Briefcase className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white">Engineering Career Ladder</h1>
-            <p className="text-xs text-slate-400">Professional progression for {user.name} (@{user.username})</p>
+            <h1 className="text-2xl font-extrabold text-white tracking-tight">Engineering Career Ladder</h1>
+            <p className="text-[13px] font-medium text-slate-400 mt-1">Professional progression for {user.name} (@{user.username})</p>
           </div>
         </div>
 
-        <div className="px-3.5 py-1.5 rounded-xl bg-[#0b1426] border border-[#172f5c] text-xs font-semibold text-cyan-300 flex items-center gap-2">
-          <Zap className="w-3.5 h-3.5 text-[#00e5ff]" />
-          <span>Current XP: {user.xp} • Level {user.level}</span>
+        <div className="px-5 py-2.5 rounded-full bg-white/5 border border-white/10 shadow-sm flex items-center gap-2.5 text-[13px] font-bold text-white backdrop-blur-md">
+          <div className="relative flex items-center justify-center">
+            <Zap className="w-4 h-4 text-blue-400 z-10" />
+            <div className="absolute inset-0 bg-blue-500/30 blur-sm rounded-full"></div>
+          </div>
+          <span className="tracking-tight">Current XP: <span className="text-blue-400">{user.xp}</span></span>
+          <span className="w-px h-3.5 bg-white/20 mx-1"></span>
+          <span className="text-slate-400 font-semibold">Level {user.level}</span>
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4 z-10 relative">
         {ladder.map((step) => (
           <div
             key={step.rank}
-            className={`p-4 rounded-xl border transition-all flex items-center justify-between ${
+            className={`p-5 rounded-2xl border transition-all flex items-center justify-between group ${
               step.current
-                ? 'bg-[#0b1730] border-[#00e5ff]/50 shadow-md'
+                ? 'bg-[#121927]/90 border-blue-500/50 shadow-xl ring-1 ring-blue-500/30 backdrop-blur-xl scale-[1.01]'
                 : step.status === 'Completed'
-                ? 'bg-[#090f1e] border-[#162744] opacity-80'
-                : 'bg-[#060a14] border-[#131f34] opacity-50'
+                ? 'bg-white/[0.02] border-white/5 hover:bg-white/[0.04]'
+                : 'bg-transparent border-transparent opacity-50'
             }`}
           >
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-5">
               <div
-                className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold font-mono ${
-                  step.current ? 'bg-[#00e5ff] text-[#070b14]' : 'bg-[#121f36] text-slate-400'
+                className={`w-10 h-10 rounded-xl flex items-center justify-center text-[13px] font-bold font-mono shadow-sm ${
+                  step.current ? 'bg-gradient-to-br from-blue-500 to-indigo-600 text-white' : 'bg-white/5 text-slate-400 border border-white/5'
                 }`}
               >
                 0{step.id}
               </div>
               <div>
-                <h3 className="text-sm font-bold text-white">{step.rank}</h3>
-                <span className="text-xs text-slate-400 font-mono">
-                  Market Reference: {step.salary} • Threshold: {step.reqXp} XP
+                <h3 className={`text-[15px] font-bold tracking-tight ${step.current ? 'text-white' : 'text-slate-200 group-hover:text-white transition-colors'}`}>{step.rank}</h3>
+                <span className="text-[11px] text-slate-400 font-medium tracking-wide uppercase mt-0.5 block flex items-center gap-3">
+                  <span className="flex items-center gap-1.5"><TrendingUp className="w-3.5 h-3.5 text-emerald-400" /> Market: {step.salary}</span>
+                  <span className="w-1 h-1 rounded-full bg-white/10"></span>
+                  <span>Threshold: {step.reqXp} XP</span>
                 </span>
               </div>
             </div>
 
             <div>
               {step.current ? (
-                <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#00e5ff]/15 text-[#00e5ff] border border-[#00e5ff]/40">
+                <span className="px-4 py-1.5 rounded-full text-[11px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20 shadow-[0_0_10px_rgba(59,130,246,0.1)]">
                   CURRENT ROLE ({user.xp} / {step.reqXp} XP)
                 </span>
               ) : step.status === 'Completed' ? (
-                <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-950/40 text-emerald-400 border border-emerald-800/40 flex items-center gap-1">
+                <span className="px-4 py-1.5 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>MASTERED</span>
                 </span>
               ) : (
-                <span className="px-3 py-1 rounded-full text-xs font-bold bg-slate-900 text-slate-500 border border-slate-800 flex items-center gap-1">
+                <span className="px-4 py-1.5 rounded-full text-[11px] font-bold bg-white/5 text-slate-500 border border-white/5 flex items-center gap-1.5">
                   <Lock className="w-3.5 h-3.5" />
                   <span>LOCKED</span>
                 </span>

@@ -1,0 +1,126 @@
+{
+  "name": "Jhon Moreno",
+  "username": "Jhonmoreno000",
+  "role": "Database Engineering Trainee",
+  "level": 1,
+  "xp": 0,
+  "rankTitle": "Level 1 Trainee",
+  "completedMissions": [],
+  "completedObjectives": {},
+  "queriesExecuted": 11,
+  "unlockedHints": {},
+  "unlockedSideQuests": {},
+  "badges": [],
+  "queryHistory": [
+    {
+      "id": "q-1788914658398",
+      "missionId": "1842",
+      "missionTitle": "Payment Integrity",
+      "sql": "SELECT * FROM transactions LIMIT 25;",
+      "executionTimeMs": 12,
+      "rowCount": 3,
+      "status": "SUCCESS",
+      "timestamp": "2026-09-09 00:44:18"
+    },
+    {
+      "id": "q-1788914652433",
+      "missionId": "1842",
+      "missionTitle": "Payment Integrity",
+      "sql": "SELECT * FROM payments LIMIT 25;",
+      "executionTimeMs": 12,
+      "rowCount": 5,
+      "status": "SUCCESS",
+      "timestamp": "2026-09-09 00:44:12"
+    },
+    {
+      "id": "q-1788914646010",
+      "missionId": "1842",
+      "missionTitle": "Payment Integrity",
+      "sql": "SELECT * FROM orders LIMIT 25;",
+      "executionTimeMs": 18,
+      "rowCount": 5,
+      "status": "SUCCESS",
+      "timestamp": "2026-09-09 00:44:06"
+    },
+    {
+      "id": "q-1788914639217",
+      "missionId": "1842",
+      "missionTitle": "Payment Integrity",
+      "sql": "SELECT * FROM customers LIMIT 25;",
+      "executionTimeMs": 12,
+      "rowCount": 5,
+      "status": "SUCCESS",
+      "timestamp": "2026-09-09 00:43:59"
+    },
+    {
+      "id": "q-1788912281157",
+      "missionId": "1842",
+      "missionTitle": "Payment Integrity",
+      "sql": "SELECT * FROM refunds LIMIT 5;",
+      "executionTimeMs": 12,
+      "rowCount": 0,
+      "status": "SUCCESS",
+      "timestamp": "2026-09-09 00:04:41"
+    },
+    {
+      "id": "q-1788912275855",
+      "missionId": "1842",
+      "missionTitle": "Payment Integrity",
+      "sql": "SELECT * FROM refunds LIMIT 5;",
+      "executionTimeMs": 12,
+      "rowCount": 0,
+      "status": "SUCCESS",
+      "timestamp": "2026-09-09 00:04:35"
+    },
+    {
+      "id": "q-1788910975947",
+      "missionId": "1842",
+      "missionTitle": "Payment Integrity",
+      "sql": "SELECT * FROM customers LIMIT 5;",
+      "executionTimeMs": 12,
+      "rowCount": 5,
+      "status": "SUCCESS",
+      "timestamp": "2026-09-08 23:42:55"
+    },
+    {
+      "id": "q-1788910971912",
+      "missionId": "1842",
+      "missionTitle": "Payment Integrity",
+      "sql": "SELECT * FROM customers LIMIT 25;",
+      "executionTimeMs": 12,
+      "rowCount": 5,
+      "status": "SUCCESS",
+      "timestamp": "2026-09-08 23:42:51"
+    },
+    {
+      "id": "q-1788910968727",
+      "missionId": "1842",
+      "missionTitle": "Payment Integrity",
+      "sql": "SELECT * FROM customers LIMIT 5;",
+      "executionTimeMs": 12,
+      "rowCount": 5,
+      "status": "SUCCESS",
+      "timestamp": "2026-09-08 23:42:48"
+    },
+    {
+      "id": "q-1788910963692",
+      "missionId": "1842",
+      "missionTitle": "Payment Integrity",
+      "sql": "SELECT * FROM orders LIMIT 5;",
+      "executionTimeMs": 12,
+      "rowCount": 5,
+      "status": "SUCCESS",
+      "timestamp": "2026-09-08 23:42:43"
+    },
+    {
+      "id": "q-1788910959429",
+      "missionId": "1842",
+      "missionTitle": "Payment Integrity",
+      "sql": "SELECT * FROM customers LIMIT 5;",
+      "executionTimeMs": 21,
+      "rowCount": 5,
+      "status": "SUCCESS",
+      "timestamp": "2026-09-08 23:42:39"
+    }
+  ]
+}

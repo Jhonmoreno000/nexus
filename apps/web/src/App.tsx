@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TopNavbar } from './components/TopNavbar';
 import { Sidebar } from './components/Sidebar';
 import { IncidentHeader } from './components/IncidentHeader';
@@ -144,11 +144,17 @@ export function App() {
     loadMission('1842');
   }, []);
 
-  // Load Mission from API
+  const [isMissionLoading, setIsMissionLoading] = useState(false);
+
+  // Core Mission Engine
   const loadMission = async (id: string) => {
     setActiveMissionId(id);
     setIsWorkspaceOpen(true);
     setActiveTab('missions');
+    setIsMissionLoading(true);
+    // Clear old mission data so we don't flash old tables/text
+    setMissionData({} as any);
+    
     try {
       const res = await fetch(`/api/missions/${id}`);
       if (res.ok) {
@@ -158,6 +164,8 @@ export function App() {
       }
     } catch (e) {
       console.error('Failed to load mission:', e);
+    } finally {
+      setIsMissionLoading(false);
     }
   };
 
@@ -353,15 +361,24 @@ export function App() {
         )}
 
         {activeTab === 'missions' && isWorkspaceOpen && (
-          <div className="flex-1 flex flex-col overflow-hidden bg-black">
+          <div className="flex-1 flex flex-col overflow-hidden bg-[#0a0e17] relative">
+            
+            {/* Loading Overlay */}
+            {isMissionLoading && (
+              <div className="absolute inset-0 z-50 bg-[#0a0e17]/80 backdrop-blur-sm flex flex-col items-center justify-center">
+                <div className="w-10 h-10 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-4"></div>
+                <div className="text-blue-400 font-bold text-sm tracking-wide">INITIALIZING SANDBOX ENVIRONMENT...</div>
+              </div>
+            )}
+
             {/* Incident Header */}
-            <div className="relative">
+            <div className="relative z-10">
               <IncidentHeader
-                incidentNumber={missionData.incidentNumber}
-                title={missionData.title}
-                subtitle={missionData.context}
-                difficulty={missionData.difficulty}
-                initialSeconds={missionData.timeRemainingSeconds}
+                incidentNumber={missionData.incidentNumber || 0}
+                title={missionData.title || 'Loading...'}
+                subtitle={missionData.context || ''}
+                difficulty={missionData.difficulty || 'Loading'}
+                initialSeconds={missionData.timeRemainingSeconds || 0}
               />
               <button
                 onClick={() => setIsWorkspaceOpen(false)}
@@ -378,9 +395,9 @@ export function App() {
               {/* Column 1: Mission Briefing */}
               <div className="col-span-3 h-full overflow-hidden">
                 <MissionBriefing
-                  context={missionData.context}
-                  objectives={missionData.objectives}
-                  relatedTables={missionData.relatedTables}
+                  context={missionData.context || ''}
+                  objectives={missionData.objectives || []}
+                  relatedTables={missionData.relatedTables || []}
                   activeObjectiveId={activeObjectiveId}
                   onObjectiveSelect={setActiveObjectiveId}
                   onTableClick={(tbl) => setPreviewTable(tbl)}
@@ -409,7 +426,7 @@ export function App() {
               <div className="col-span-3 h-full flex flex-col overflow-hidden">
                 <div className="flex-1 overflow-hidden">
                   <DatabaseExplorer
-                    schema={missionData.schema}
+                    schema={missionData.schema || []}
                     onTablePreview={(tbl) => setPreviewTable(tbl)}
                     onInsertQuery={(snippet) => {
                       setSql(snippet);
@@ -436,7 +453,7 @@ export function App() {
         isOpen={isHintOpen}
         onClose={() => setIsHintOpen(false)}
         missionId={activeMissionId}
-        missionTitle={missionData.title}
+        missionTitle={missionData.title || ''}
         quizQuestions={missionData.quizQuestions || []}
         sideQuests={missionData.sideQuests || []}
         unlockedHintLevels={missionData.unlockedHints || []}
@@ -461,7 +478,7 @@ export function App() {
         isOpen={Boolean(previewTable)}
         onClose={() => setPreviewTable(null)}
         tableName={previewTable}
-        schema={missionData.schema}
+        schema={missionData.schema || []}
         missionId={activeMissionId}
         onInsertQuery={(snippet) => {
           setSql(snippet);
