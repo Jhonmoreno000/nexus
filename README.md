@@ -226,7 +226,6 @@ Ambos servicios se iniciarán automáticamente:
 
 - **Proyecto**: NEXUS — Database Engineering Simulator
 - **Autor / Ingeniero**: Jhon Moreno ([@Jhonmoreno000](https://github.com/Jhonmoreno000))
-- **Licencia**: Distribuido bajo la Licencia MIT. Consulta el archivo `LICENSE` para más información.
 
 <div align="center">
   <sub>Construido con pasión por la ingeniería de bases de datos. <b>Don't study SQL. Use it.</b></sub>
